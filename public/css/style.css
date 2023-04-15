@@ -1,0 +1,60 @@
+nav .navbar {
+    *zoom:1;
+    list-style:none;
+    margin:0;
+    padding:0;
+}
+nav .navbar:before,.nav ul:after {
+    content:"";
+    display:table;
+}
+nav .navbar:after {
+    clear:both;
+}
+nav .navbar > li {
+    float:left;
+    position:relative;
+}
+nav .navbar {
+    display:block;
+    padding:10px 20px;
+    line-height:1.2em;
+    color:#fff;
+}
+nav .navbar a:hover {
+    text-decoration:none;
+    background:#81D4FA;
+    border-radius: 3px;
+}
+nav .navbar li ul {
+    background:white;
+}
+nav .navbar li ul li {
+    width:200px;
+}
+nav .navbarli ul a {
+    border:none;
+}
+nav .background{
+    height: 85vh;
+}
+.image-fluid h1{
+    word-spacing: 7px;
+}
+nav .navbar-nav .active{
+    background-color: #81D4FA;
+    border-radius: 3px; 
+}
+.carousel-control-prev .carousel-control-prev-icon {
+    background-color: black;
+    border-radius: 50px;
+}
+.carousel-control-next .carousel-control-next-icon{
+    background-color: black;
+    border-radius: 50px;
+} 
+.container-fluid .carousel-item img{
+    height: 20vh;
+    width: 50%;
+    
+}
