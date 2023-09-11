@@ -92,12 +92,12 @@
                         <h3 class="mt-3 display-6">Our Available Dentist</h3>
                         @if(!empty($dentists) && $dentists->count())
                             @foreach ($dentists as $dentist)
-                                <a href=""><div class="card rounded shadow mt-5 mb-3 hover-zoom me-4 border border-info"  style=" width: 23rem; display: inline-block; ">
-                                    <img src="{{ asset('upload/dentist_profile/'.$dentist->photo) }}" class="card-img-top" alt="..." style="height: 30vh; width: 23rem;">
+                                <a href=""><div class="card rounded shadow mt-5 mb-3 hover-zoom me-4 border border-info"  style=" width: 20rem; display: inline-block; ">
+                                    <img src="{{ asset('upload/dentist_profile/'.$dentist->photo) }}" class="card-img-top" alt="..." style="height: 30vh; width: 20rem;">
                                     <div class="card-body text-dark text-start">
                                         <h6 class="card-title fw-normal text-muted text-center">Fullname: Dr. {{ $dentist->firstname }} {{ $dentist->lastname }}</h6><hr>
                                         <!-- <h6 class="card-title">Email: {{ $dentist->email}}</h6><p class="card-text"></p><hr> -->
-                                        <h6 class="card-title fw-normal text-center text-muted">Profession: 
+                                        <p class="card-title fw-normal text-center text-muted">Profession: 
                                             @if ($dentist->dentist_pro == 0)
                                                 <span>General Dentist </span>
                                                 @elseif ($dentist->dentist_pro == 1)
@@ -105,10 +105,10 @@
                                                 @elseif ($dentist->dentist_pro == 2)
                                                 <span>Periodontist </span>
                                                 @elseif ($dentist->dentist_pro == 3)
-                                                <span>Oral and Maxillofacial Surgeon</span>
+                                                <span>Maxillofacial Surgeon</span>
                                                 @elseif ($dentist->dentist_pro == 4)
                                                 <span>Dental Hygienist</span>
-                                            @endif</h6>
+                                            @endif</p>
                                             <!-- <h6 class="card-title">Registration No: {{ $dentist->registration_num}}</h6><p class="card-text"></p><hr>
                                             <h6 class="card-title">Phone Number: {{ $dentist->phone_number}}</h6><p class="card-text"></p><hr> -->
                                     </div>

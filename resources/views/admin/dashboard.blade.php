@@ -9,7 +9,7 @@
     <meta name="description" content="">
     <meta name="author" content="">
 
-    <title>Dental Admin - Dashboard</title>
+    <title>{{__('Admin Dashboard') }}</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.3.0/css/all.min.css" integrity="sha512-SzlrxWUlpfuzQ+pcUCosxcglQRNAq/DZjVsC0lE40xsADsfeQoEypE+enwcOiGjk/bSuGGKHEyjSoQ1zVisanQ==" crossorigin="anonymous" referrerpolicy="no-referrer" />
 
     <!-- Font Awesome -->
@@ -34,7 +34,7 @@
 
     <script defer src="/js/script.js"></script>
     <link rel="stylesheet" href="https://cdn.datatables.net/1.13.4/css/dataTables.bootstrap5.min.css">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/5.2.0/css/bootstrap.min.css">
+    <!-- <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/5.2.0/css/bootstrap.min.css"> -->
 
 </head>
 
@@ -51,7 +51,7 @@
             <!-- Sidebar - Brand -->
             <a class="sidebar-brand d-flex align-items-center justify-content-center" href="index.html">
                 <div class="sidebar-brand-icon">
-                <i class="fas fa-user-circle fa-lg text-light"></i>
+                <img id="showImage" src="{{ (!empty(Auth::user()->photo))? url('upload/admin_profile/'.Auth::user()->photo):url('images/avatar/profile.jpg') }}" class="rounded-circle" height="22" alt="">
                 </div>
                 <div class="sidebar-brand-text mx-2">Dental Admin</div>
             </a>
@@ -74,21 +74,7 @@
                 Interface
             </div>
              
-            <!-- Nav Item - Utilities Collapse Menu -->
-
-             <!-- Users Managements -->
-             <!-- <li class="nav-item">
-                <a class="nav-link" href="{{ route('users.manage') }}">
-                <i class="fas fa-user fa-2x"></i>
-                    <span>Users Management</span></a>
-            </li> -->
-
-             <!-- Patients -->
-             <!-- <li class="nav-item">
-                <a class="nav-link" href="{{ route('dental.patient') }}">
-                <i class="fa-solid fa-wheelchair"></i>
-                    <span>Patients</span></a>
-            </li> -->
+            
 
           <!-- Nav Item - Pages Collapse Menu -->
             <li class="nav-item">
@@ -104,7 +90,6 @@
                     </div>
                 </div>
             </li>
-           
 
             <!-- Nav Item - Pages Collapse Menu -->
             <li class="nav-item">
@@ -122,7 +107,7 @@
 
             <!-- Orders-->
             <li class="nav-item">
-                <a class="nav-link" href="">
+                <a class="nav-link" href="{{ route('orders') }}">
                 <i class="fa-solid fa-bag-shopping"></i>
                     <span>Orders</span></a>
             </li>
@@ -145,14 +130,14 @@
 
             <!-- Nav Item - Charts -->
             <li class="nav-item">
-                <a class="nav-link" href="index.html">
+                <a class="nav-link" href="{{ route('payment') }}">
                     <i class="fa-sm fw-bold fa-2x">₱</i>
                     <span>Manage Payment</span></a>
             </li>
 
             <!-- Nav Item - Tables -->
             <li class="nav-item">
-                <a class="nav-link" href="index.html">
+                <a class="nav-link" href="{{ route('admin.reports') }}">
                 <i class="fa-sharp fa-solid fa-notes-medical"></i>
                     <span>Transaction</span></a>
             </li>
@@ -182,8 +167,8 @@
                     <ul class="navbar-nav ml-auto">
                         <!-- Nav Item - User Information -->
                         <div class="dropdown">
-                            <button class="btn btn-info dropdown-toggle me-2 text-capitalize text-light" type="button" id="dropdownMenuButton" data-mdb-toggle="dropdown" aria-expanded="false">
-                            Admin {{ Auth::user()->firstname }} 
+                            <button class="btn btn-info dropdown-toggle text-capitalize text-light" type="button" id="dropdownMenuButton" data-mdb-toggle="dropdown" aria-expanded="false">
+                            {{ Auth::user()->firstname }} 
                             <img id="showImage" src="{{ (!empty(Auth::user()->photo))? url('upload/admin_profile/'.Auth::user()->photo):url('images/avatar/profile.jpg') }}" class="rounded-circle" height="22" alt="">
                         </button>
                         <ul class="dropdown-menu" aria-labelledby="dropdownMenuButton">
@@ -207,172 +192,190 @@
 
                         <!--Orders Card Example -->
                         <div class="col-xl-3 col-md-6 mb-4">
-                            <div class="card border-left-primary shadow h-100 py-2">
-                                <div class="card-body">
-                                    <div class="row no-gutters align-items-center">
-                                        <div class="col mr-2">
-                                            <div class="text-xs font-weight-bold text-primary text-uppercase mb-1">
-                                                Orders</div>
-                                            <div class="h5 mb-0 font-weight-bold text-gray-800">0</div>
-                                        </div>
-                                        <div class="col-auto">
-                                            <i class="fas fa-cart-plus fa-2x text-gray-300"></i>
+                            <a href="{{ route('orders') }}">
+                                <div class="card border-left-primary shadow h-100 py-2">
+                                    <div class="card-body">
+                                        <div class="row no-gutters align-items-center">
+                                            <div class="col mr-2">
+                                                <div class="text-xs font-weight-bold text-primary text-uppercase mb-1">
+                                                Pending Orders</div>
+                                                <div class="h5 mb-0 font-weight-bold text-gray-800">{{$orderCount}}</div>
+                                            </div>
+                                            <div class="col-auto">
+                                                <i class="fas fa-cart-plus fa-2x text-gray-300"></i>
+                                            </div>
                                         </div>
                                     </div>
                                 </div>
-                            </div>
+                            </a>
                         </div>
 
                         <!-- Patients Card Example -->
                         <div class="col-xl-3 col-md-6 mb-4">
-                            <div class="card border-left-success shadow h-100 py-2">
-                                <div class="card-body">
-                                    <div class="row no-gutters align-items-center">
-                                        <div class="col mr-2">
-                                            <div class="text-xs font-weight-bold text-success text-uppercase mb-1">
-                                              Total  Patients</div>
-                                            <div class="h5 mb-0 font-weight-bold text-gray-800">{{$patients}}</div>
-                                        </div>
-                                        <div class="col-auto">
-                                            <i class="fas fa-user fa-2x text-gray-300"></i>
+                            <a href="{{ route('dental.patient') }}">
+                                <div class="card border-left-success shadow h-100 py-2">
+                                    <div class="card-body">
+                                        <div class="row no-gutters align-items-center">
+                                            <div class="col mr-2">
+                                                <div class="text-xs font-weight-bold text-success text-uppercase mb-1">
+                                                Total  Patients</div>
+                                                <div class="h5 mb-0 font-weight-bold text-gray-800">{{$patients}}</div>
+                                            </div>
+                                            <div class="col-auto">
+                                                <i class="fas fa-user fa-2x text-gray-300"></i>
+                                            </div>
                                         </div>
                                     </div>
                                 </div>
-                            </div>
+                            </a>
                         </div>
 
                          <!-- Patients Card Example -->
                          <div class="col-xl-3 col-md-6 mb-4">
-                            <div class="card border-left-info shadow h-100 py-2">
-                                <div class="card-body">
-                                    <div class="row no-gutters align-items-center">
-                                        <div class="col mr-2">
-                                            <div class="text-xs font-weight-bold text-info text-uppercase mb-1">
-                                              Dentists</div>
-                                            <div class="h5 mb-0 font-weight-bold text-gray-800">{{$dentist}}</div>
-                                        </div>
-                                        <div class="col-auto">
-                                            <i class="fas fa-user-md fa-2x text-gray-300"></i>
+                            <a href="{{ route('dentist.list') }}">
+                                <div class="card border-left-info shadow h-100 py-2">
+                                    <div class="card-body">
+                                        <div class="row no-gutters align-items-center">
+                                            <div class="col mr-2">
+                                                <div class="text-xs font-weight-bold text-info text-uppercase mb-1">
+                                                Dentists</div>
+                                                <div class="h5 mb-0 font-weight-bold text-gray-800">{{$dentist}}</div>
+                                            </div>
+                                            <div class="col-auto">
+                                                <i class="fas fa-user-md fa-2x text-gray-300"></i>
+                                            </div>
                                         </div>
                                     </div>
                                 </div>
-                            </div>
+                            </a>
                         </div>
 
                         <!-- Pending Requests Card Example -->
                         <div class="col-xl-3 col-md-6 mb-4">
-                            <div class="card border-left-warning shadow h-100 py-2">
-                                <div class="card-body">
-                                    <div class="row no-gutters align-items-center">
-                                        <div class="col mr-2">
-                                            <div class="text-xs font-weight-bold text-warning text-uppercase mb-1">
-                                                Pending Requests</div>
-                                            <div class="h5 mb-0 font-weight-bold text-gray-800">{{$pending}}</div>
-                                        </div>
-                                        <div class="col-auto">
-                                            <i class="fas fa-comments fa-2x text-gray-300"></i>
+                            <a href="{{ route('appointment') }}">
+                                <div class="card border-left-warning shadow h-100 py-2">
+                                    <div class="card-body">
+                                        <div class="row no-gutters align-items-center">
+                                            <div class="col mr-2">
+                                                <div class="text-xs font-weight-bold text-warning text-uppercase mb-1">
+                                                    Pending Appointments</div>
+                                                <div class="h5 mb-0 font-weight-bold text-gray-800">{{$pending}}</div>
+                                            </div>
+                                            <div class="col-auto">
+                                                <i class="fas fa-comments fa-2x text-gray-300"></i>
+                                            </div>
                                         </div>
                                     </div>
                                 </div>
-                            </div>
+                            </a>
                         </div>
                     </div>
 
                     <!-- Content Row -->
 
                     <div class="row">
-
-                        <!-- Area Chart -->
-                        <div class="col-xl-8 col-lg-7">
-                            <div class="card shadow mb-4 border border-info">
-                                <!-- Card Header - Dropdown -->
-                                <div class="card-header py-3 d-flex flex-row align-items-center justify-content-between">
-                                    <h6 class="m-0 font-weight-bold text-info">Today's Appointment</h6>
-                                    
-                                </div>
-                                <!-- Card Body -->
+                        <div class="col-xl-12 col-lg-7">
+                            <div class="card">
                                 <div class="card-body">
-                                
-                                    <table id="example" class="table table-striped" style="width:100%">
-                                        <thead class="table-info">
-                                            <tr>
-                                                <th>#</th>
-                                                <th>Name</th>
-                                                <th>Treatments</th>
-                                                <th>Time</th>
-                                                <th>Dentist</th>
-                                                <th>Status</th>
-                                                <th>Action</th>
-                                            </tr>
-                                        </thead>
-                                        <tbody>
-                                            @foreach ($appointment as $appointments)
-                                            <tr>
-                                                <td scope="row">{{$loop->iteration}}</td>
-                                                <td>{{$appointments->user->firstname}}</td>
-                                                <td>{{$appointments->treatment->name}}</td>
-                                                <td>{{$appointments->time }}</td>
-                                                <td>
-                                                    @if ($appointments->select_doctor ==3)
-                                                        <span>Dr. Jason</span>
-                                                    @elseif ($appointments->select_doctor ==4)
-                                                        <span>Dr. Aeron</span>
-                                                        @elseif ($appointments->select_doctor ==6)
-                                                        <span>Dr. Wida</span>
-                                                    @endif
-                                                </td>
-                                                <td>
-                                                    @if($appointments->status == 0)
-                                                        <span class="badge text-bg-primary">Pending</span>
-                                                        @elseif($appointments->status ==1)
-                                                            <span class="badge text-bg-success">Confirm</span>
-                                                        @elseif($appointments->status ==2)
-                                                            <span class="badge text-bg-info">Arrived</span>
-                                                        @elseif($appointments->status ==3)
-                                                            <span class="badge text-bg-success">Done</span>
-                                                    @endif
-                                                </td>
-                                                <td>
-                                                    <a href="{{ url('/show/appointments/'. $appointments->id) }}" button type="submit" class="btn btn-info btn-sm text-capitalize" ><i class="fas fa-eye"></i></button></a>
-                                                </td>
-                                            </tr>
-                                            @endforeach
-                                        </tbody>
-                                    </table>
-                                </div>
-                            </div>
-                        </div>
-
-                        <!-- Pie Chart -->
-                        <div class="col-xl-4 col-lg-5">
-                            <div class="card shadow mb-4 border border-info">
-                                <!-- Card Header - Dropdown -->
-                                <div class="card-header py-3 d-flex flex-row align-items-center justify-content-between">
-                                    <h6 class="m-0 font-weight-bold text-info">Dentist's Profile</h6>
-                                    
-                                </div>
-                                <!-- Card Body -->
-                                <div class="card-body">
-                                    <table class="table">
-                                        <thead>
-                                            <tr>
-                                            <th scope="col">#</th>
-                                            <th scope="col">Photo</th>
-                                            <th scope="col">Firstname</th>
-                                            </tr>
-                                        </thead>
-                                        <tbody>
-                                            @foreach ($dentistpro as $dentist)
-                                                <tr>
-                                                    <th scope="row">{{$loop->iteration}}</th>
-                                                    <th>
-                                                        <img src="{{ (!empty($dentist->photo))? url('upload/dentist_profile/'.$dentist->photo):url('images/avatar/empty.png') }}" class="rounded-circle" style="height: 8vh; width: 35%;" alt="..." />
-                                                    </th>
-                                                    <td>Dr. {{$dentist->firstname}}</td>
-                                                </tr>
-                                            @endforeach
-                                        </tbody>
-                                    </table>
+                                    <ul class="nav nav-tabs" id="myTab" role="tablist">
+                                        <li class="nav-item" role="presentation">
+                                            <button class="nav-link active fw-bold" id="home-tab" data-bs-toggle="tab" data-bs-target="#home-tab-pane" type="button" role="tab" aria-controls="home-tab-pane" aria-selected="true">Today's Appointment</button>
+                                        </li>
+                                        <li class="nav-item" role="presentation">
+                                            <button class="nav-link fw-bold" id="profile-tab" data-bs-toggle="tab" data-bs-target="#profile-tab-pane" type="button" role="tab" aria-controls="profile-tab-pane" aria-selected="false">Today's Order</button>
+                                        </li>
+                                    </ul>
+                                    <div class="tab-content" id="myTabContent">
+                                        <div class="tab-pane fade show active" id="home-tab-pane" role="tabpanel" aria-labelledby="home-tab" tabindex="0">
+                                            <div class="card-body">
+                                                <div class="table-responsive">
+                                                    <table id="example" class="table" style="width:100%">
+                                                        <thead class="table-info">
+                                                            <tr>
+                                                                <th>#</th>
+                                                                <th>Name</th>
+                                                                <th>Treatments</th>
+                                                                <th>Date and Time</th>
+                                                                <th>Dentist</th>
+                                                                <th>Status</th>
+                                                                <th>Action</th>
+                                                            </tr>
+                                                        </thead>
+                                                        <tbody>
+                                                            @foreach ($appointment as $appointments)
+                                                            <tr>
+                                                                <td scope="row">{{$loop->iteration}}</td>
+                                                                <td>{{$appointments->user->firstname}}</td>
+                                                                <td>{{$appointments->treatment->name}}</td>
+                                                                <td>{{$appointments->date}}</td>
+                                                                <td>
+                                                                    @if ($appointments->select_doctor ==3)
+                                                                        <span>Dr. Jason</span>
+                                                                    @elseif ($appointments->select_doctor ==4)
+                                                                        <span>Dr. Aeron</span>
+                                                                        @elseif ($appointments->select_doctor ==6)
+                                                                        <span>Dr. Wida</span>
+                                                                    @endif
+                                                                </td>
+                                                                <td>
+                                                                    @if($appointments->status == 0)
+                                                                        <span class="badge text-bg-primary text-light">Pending</span>
+                                                                        @elseif($appointments->status ==1)
+                                                                            <span class="badge text-bg-success text-light">Confirm</span>
+                                                                        @elseif($appointments->status ==2)
+                                                                            <span class="badge text-bg-info text-light">Arrived</span>
+                                                                        @elseif($appointments->status ==3)
+                                                                            <span class="badge text-bg-success text-light">Done</span>
+                                                                    @endif
+                                                                </td>
+                                                                <td>
+                                                                    <a href="{{ url('/show/appointments/'. $appointments->id) }}" button type="submit" class="btn btn-info btn-sm text-capitalize {{$appointments->status ==3 ? 'disabled' : ''}}" ><i class="fas fa-eye"></i></button></a>
+                                                                </td>
+                                                            </tr>
+                                                            @endforeach
+                                                        </tbody>
+                                                    </table>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="tab-pane fade" id="profile-tab-pane" role="tabpanel" aria-labelledby="profile-tab" tabindex="0">
+                                            <div class="card-body">
+                                                <div class="table-responsive">
+                                                    <table id="examples" class="table" style="width:100%">
+                                                        <thead class="table-info">
+                                                            <tr>
+                                                                <th>#</th>
+                                                                <th>Patient Name</th>
+                                                                <th>Email</th>
+                                                                <th>Phone</th>
+                                                                <th>Total Amount</th>
+                                                                <th>Order Status</th>
+                                                            </tr>
+                                                        </thead>
+                                                        <tbody>
+                                                            @foreach ($order as $orders)
+                                                            <tr>
+                                                                <td scope="row">{{$loop->iteration}}</td>
+                                                                <td>{{$orders->firstname}}</td>
+                                                                <td>{{$orders->email}}</td>
+                                                                <td>{{$orders->phone_number}}</td>
+                                                                <td>&#8369; {{$orders->total}}</td>
+                                                                <td>
+                                                                    @if ($orders->status ==1)
+                                                                    <span class="badge text-bg-primary text-light">Not Paid</span>
+                                                                    @elseif ($orders->status ==2)
+                                                                    <span class="badge text-bg-success text-light">Paid</span>
+                                                                    @else <span class="badge text-bg-primary text-light">Pending</span>
+                                                                    @endif
+                                                                </td>
+                                                            </tr>
+                                                            @endforeach
+                                                        </tbody>
+                                                    </table>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
                                 </div>
                             </div>
                         </div>

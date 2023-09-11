@@ -15,12 +15,11 @@ return new class extends Migration
     {
         Schema::create('order_details', function (Blueprint $table) {
             $table->id();
-            $table->string('firstname')->nullable();
+            $table->foreignId('order_id')->nullable();
             $table->string('product_name')->nullable();
             $table->string('product_image')->nullable();
             $table->string('quantity')->nullable();
             $table->string('subTotal')->nullable();
-            $table->string('status')->nullable()->default(0)->comment("0 = Pending 1 = Confirm 2 = Paid");
             $table->timestamps();
         });
     }

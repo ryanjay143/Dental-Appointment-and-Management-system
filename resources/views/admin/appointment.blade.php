@@ -33,8 +33,9 @@
     <script defer src="https://cdn.datatables.net/1.13.4/js/dataTables.bootstrap5.min.js"></script>
 
     <script defer src="/js/script.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/sweetalert/2.1.2/sweetalert.min.js" integrity="sha512-AA1Bzp5Q0K1KanKKmvN/4d3IRKVlv9PYgwFPvm32nPO6QS8yH1HO7LbgB1pgiOxPtfeg5zEn2ba64MUcqJx6CA==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
     <link rel="stylesheet" href="https://cdn.datatables.net/1.13.4/css/dataTables.bootstrap5.min.css">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/5.2.0/css/bootstrap.min.css">
+    <!-- <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/5.2.0/css/bootstrap.min.css"> -->
 
 </head>
 
@@ -51,7 +52,7 @@
             <!-- Sidebar - Brand -->
             <a class="sidebar-brand d-flex align-items-center justify-content-center" href="index.html">
                 <div class="sidebar-brand-icon">
-                <i class="fas fa-user-circle fa-lg text-light"></i>
+                <img id="showImage" src="{{ (!empty(Auth::user()->photo))? url('upload/admin_profile/'.Auth::user()->photo):url('images/avatar/profile.jpg') }}" class="rounded-circle" height="22" alt="">
                 </div>
                 <div class="sidebar-brand-text mx-2">Dental Admin</div>
             </a>
@@ -122,7 +123,7 @@
 
             <!-- Orders-->
             <li class="nav-item">
-                <a class="nav-link" href="">
+                <a class="nav-link" href="{{ route('orders') }}">
                 <i class="fa-solid fa-bag-shopping"></i>
                     <span>Orders</span></a>
             </li>
@@ -138,21 +139,21 @@
                     <div class="bg-white py-2 collapse-inner rounded">
                         <!-- <h6 class="collapse-header">Custom Components:</h6> -->
                         <a class="collapse-item" href="{{ route('category.products') }}"><i class="fa fa-list-alt" aria-hidden="true"></i> Categories</a>
-                        <a class="collapse-item" href="#"><i class="fab fa-product-hunt" aria-hidden="true"></i> Dental Products</a>
+                        <a class="collapse-item" href="{{ route('product.view') }}"><i class="fab fa-product-hunt" aria-hidden="true"></i> Dental Products</a>
                     </div>
                 </div>
             </li>
 
             <!-- Nav Item - Charts -->
             <li class="nav-item">
-                <a class="nav-link" href="index.html">
+                <a class="nav-link" href="{{ route('payment') }}">
                     <i class="fa-sm fw-bold fa-2x">₱</i>
                     <span>Manage Payment</span></a>
             </li>
 
             <!-- Nav Item - Tables -->
             <li class="nav-item">
-                <a class="nav-link" href="index.html">
+                <a class="nav-link" href="{{ route('admin.reports') }}">
                 <i class="fa-sharp fa-solid fa-notes-medical"></i>
                     <span>Transaction</span></a>
             </li>
@@ -182,8 +183,8 @@
                         
                         <!-- Nav Item - User Information -->
                         <div class="dropdown">
-                            <button class="btn btn-info dropdown-toggle me-2 text-capitalize" type="button" id="dropdownMenuButton" data-mdb-toggle="dropdown" aria-expanded="false">
-                            Admin {{ Auth::user()->firstname }} 
+                            <button class="btn btn-info dropdown-toggle text-capitalize" type="button" id="dropdownMenuButton" data-mdb-toggle="dropdown" aria-expanded="false">
+                            {{ Auth::user()->firstname }} 
                             <img id="showImage" src="{{ (!empty(Auth::user()->photo))? url('upload/admin_profile/'.Auth::user()->photo):url('images/avatar/profile.jpg') }}" class="rounded-circle" height="22" alt="">
                         </button>
                         <ul class="dropdown-menu" aria-labelledby="dropdownMenuButton">
@@ -205,19 +206,18 @@
                                 <!-- Card Header - Dropdown -->
                                 <div
                                     class="card-header py-3 d-flex flex-row align-items-center justify-content-between">
-                                    <h6 class="m-0 font-weight-bold text-info">Today's Appointment</h6>
+                                    <h6 class="m-0 font-weight-bold text-info">Patients Appointment</h6>
                                 </div>
                                 <!-- Card Body -->
                                 <div class="card-body">
-                                    <table id="example" class="table table-striped" style="width:100%">
-                                        <thead>
+                                    <table id="example" class="table" style="width:100%">
+                                        <thead class="table-info">
                                             <tr>
                                                 <th>#</th>
-                                                <th>Name</th>
+                                                <th>Patient Name</th>
                                                 <th>Treatments</th>
                                                 <th>Message</th>
-                                                <th>Date</th>
-                                                <th>Time</th>
+                                                <th>Date and Time</th>
                                                 <th>Status</th>
                                                 <th>Action</th>
                                             </tr>
@@ -229,8 +229,7 @@
                                                 <td>{{$app->user->firstname }}</td>
                                                 <td>{{$app->treatment->name}}</td>
                                                 <td>{{ $app->message }}</td>
-                                                <td>{{ $app->date }}</td>
-                                                <td>{{ $app->time }}</td>
+                                                <td>{{ $app->date }} {{ $app->time }}</td>
                                                 <td>
                                                     @if($app->status == 0)
                                                         <span class="badge text-bg-primary">Pending</span>
@@ -239,10 +238,10 @@
                                                     @endif
                                                 </td>
                                                 <td>
-                                                    <a href="{{ url('/appointments/'. $app->id) }}" button type="submit" class="btn btn-info btn-sm text-capitalize" ><i class="fas fa-eye"></i></button></a>
+                                                    <a href="{{ url('/appointments/'. $app->id) }}" button type="submit" class="btn btn-info btn-sm text-capitalize" ><i class="fas fa-pen"></i></button></a>
                                                     <form action="{{ url('/delete/appointment'. '/'.$app->id) }}" accept-charset="UTF-8" style="display:inline;" method="post">
                                                     @csrf
-                                                        <button type="submit" class="btn btn-danger btn-sm" title="Delete Appointments" onclick="return confirm("Confirm delete?")"><i class="fas fa-trash-alt fa-xs"></i></i></button>
+                                                        <button type="submit" class="btn btn-danger btn-sm text-capitalize" title="Delete Appointments"  onclick="confirmation(event)">Delete</button>
                                                     </form>  
                                                 </td>
                                             </tr>
@@ -274,25 +273,34 @@
         <i class="fas fa-angle-up"></i>
     </a>
 
-    <!-- Logout Modal-->
-    <div class="modal fade" id="logoutModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel"
-        aria-hidden="true">
-        <div class="modal-dialog" role="document">
-            <div class="modal-content">
-                <div class="modal-header">
-                    <h5 class="modal-title" id="exampleModalLabel">Ready to Leave?</h5>
-                    <button class="close" type="button" data-dismiss="modal" aria-label="Close">
-                        <span aria-hidden="true">×</span>
-                    </button>
-                </div>
-                <div class="modal-body">Select "Logout" below if you are ready to end your current session.</div>
-                <div class="modal-footer">
-                    <button class="btn btn-secondary" type="button" data-dismiss="modal">Cancel</button>
-                    <a class="btn btn-primary" href="login.html">Logout</a>
-                </div>
-            </div>
-        </div>
-    </div>
+    <script type="text/javascript">
+        
+        function confirmation(ev)
+        {
+            ev.preventDefault();
+
+            var urlToRedirect=ev.currentTarget.getAttribute('href');
+
+            console.log(urlToRedirect);
+
+            swal({
+                title:"Are you sure want to delete this Appointment?" ,
+                text :"You won't be able to revert this delete",
+                icon :"warning",
+                buttons : true,
+                dangerMode : true,
+            })
+
+            .then((willCancel)=>
+            {
+                if(willCancel)
+                {
+                    window.location.href=urlToRedirect;
+                }
+            });
+        }
+    </script>
+
 
     <!-- Bootstrap core JavaScript-->
     <script src="/vendor/jquery/jquery.min.js"></script>

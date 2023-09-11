@@ -4,7 +4,7 @@
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Dental Products</title>
+    <title>{{ $products->name}}</title>
     <link rel="stylesheet" href="/css/style.css">
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/css/bootstrap.min.css">
     
@@ -84,48 +84,33 @@
                                     <div class="container text-center">
                                         <div class="row">
                                             <div class="col-4">
-                                                <img src="{{ asset( $products->category->image) }}" style="width: 150px; height: 20vh;" alt="">
+                                                <img src="{{ asset( $products->image) }}" style="width: 150px; height: 20vh;" alt="">
                                             </div>
                                             <div class="col">
-                                                <h4 class="p-2 display-6 text-start text-uppercase">Category: {{ $products->category->name}}</h4> 
-                                                <p class="p-2 fw-bold text-start">Description: </p>
+                                                <h4 class="display-6 text-start text-uppercase">Category: {{ $products->category->name}}</h4> <hr>
+                                                <p class="p-1 fw-bold text-start">Description: </p>
                                                 <p class="p-1 text-start text-dark">{{ $products->category->desc }}</p>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                            <div class="card shadow mt-3">
-                                <div class="card-body">
-                                    <div class="container text-center">
-                                        <div class="row">
-                                            <div class="col-4">
-                                                <img src="{{ asset( $products->image) }}" style="width: 300px;" class="border border-dark rounded" alt="">
-                                            </div>
-                                            <div class="col">
-                                                <h5 class="p-2 display-6 text-center">Product: {{ $products->name}}</h5> 
-                                                <p class="p-2 fw-bold text-start">Description:</p>
-                                                <p class="p-1 text-start text-dark">{{ $products->desc}}</p>
-                                                
-                                                
+                                                <h5 class="display-6 text-start text-info">Product: {{ $products->name}}</h5>
+
                                                 <form action="{{ url('addcart',$products->id) }}" method="post">
                                                     @csrf
                                                     <p id="price" class="p-1 text-start text-muted text-dark fst-normal mb-3">Price: &#8369; {{ $products->price}}.00</p>
                                                     <div class="row g-3 align-items-center mb-3">
                                                         <div class="col-auto">
-                                                            <p class="p-1 text-muted col-form-label text-dark">Qty:</p>
+                                                            <p class="p-1 col-form-label text-dark">Qty:</p>
                                                         </div>
                                                         <div class="col-2">
-                                                            <input type="number" id="quantity" class="form-control border border-info" value="1" min="1" name="quantity" aria-labelledby="passwordHelpInline" style="width: 100px;">
+                                                            <input onkeyup="sum();" type="number" id="quantity" class="form-control border border-info" value="1" min="1" name="quantity" aria-labelledby="passwordHelpInline" style="width: 100px;">
                                                         </div>
                                                     </div>
                                                     <button type="submit" value="Add Cart" class="btn btn-info float-start"><i class="fab fa-opencart"></i> Add to Cart</button>
-                                                  </form>
+                                                </form>
                                             </div>
                                         </div>
                                     </div>
                                 </div>
                             </div>
+                            
                         </div>
                     </div>
                 </div>

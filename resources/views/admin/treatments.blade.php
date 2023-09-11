@@ -36,7 +36,7 @@
 
     <script defer src="/js/script.js"></script>
     <link rel="stylesheet" href="https://cdn.datatables.net/1.13.4/css/dataTables.bootstrap5.min.css">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/5.2.0/css/bootstrap.min.css">
+    <!-- <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/5.2.0/css/bootstrap.min.css"> -->
 
 </head>
 
@@ -53,7 +53,7 @@
             <!-- Sidebar - Brand -->
             <a class="sidebar-brand d-flex align-items-center justify-content-center" href="index.html">
                 <div class="sidebar-brand-icon">
-                <i class="fas fa-user-circle fa-lg text-light"></i>
+                <img id="showImage" src="{{ (!empty(Auth::user()->photo))? url('upload/admin_profile/'.Auth::user()->photo):url('images/avatar/profile.jpg') }}" class="rounded-circle" height="22" alt="">
                 </div>
                 <div class="sidebar-brand-text mx-2">Dental Admin</div>
             </a>
@@ -75,22 +75,6 @@
             <div class="sidebar-heading">
                 Interface
             </div>
-             
-            <!-- Nav Item - Utilities Collapse Menu -->
-
-             <!-- Users Managements -->
-             <!-- <li class="nav-item">
-                <a class="nav-link" href="{{ route('users.manage') }}">
-                <i class="fas fa-user fa-2x"></i>
-                    <span>Users Management</span></a>
-            </li> -->
-
-             <!-- Patients -->
-             <!-- <li class="nav-item">
-                <a class="nav-link" href="{{ route('dental.patient') }}">
-                <i class="fa-solid fa-wheelchair"></i>
-                    <span>Patients</span></a>
-            </li> -->
 
           <!-- Nav Item - Pages Collapse Menu -->
             <li class="nav-item">
@@ -124,7 +108,7 @@
 
             <!-- Orders-->
             <li class="nav-item">
-                <a class="nav-link" href="">
+                <a class="nav-link" href="{{ route('orders') }}">
                 <i class="fa-solid fa-bag-shopping"></i>
                     <span>Orders</span></a>
             </li>
@@ -140,21 +124,21 @@
                     <div class="bg-white py-2 collapse-inner rounded">
                         <!-- <h6 class="collapse-header">Custom Components:</h6> -->
                         <a class="collapse-item" href="{{ route('category.products') }}"><i class="fa fa-list-alt" aria-hidden="true"></i> Categories</a>
-                        <a class="collapse-item" href="#"><i class="fab fa-product-hunt" aria-hidden="true"></i> Dental Products</a>
+                        <a class="collapse-item" href="{{ route('product.view') }}"><i class="fab fa-product-hunt" aria-hidden="true"></i> Dental Products</a>
                     </div>
                 </div>
             </li>
 
             <!-- Nav Item - Charts -->
             <li class="nav-item">
-                <a class="nav-link" href="index.html">
+                <a class="nav-link" href="{{ route('payment') }}">
                     <i class="fa-sm fw-bold fa-2x">₱</i>
                     <span>Manage Payment</span></a>
             </li>
 
             <!-- Nav Item - Tables -->
             <li class="nav-item">
-                <a class="nav-link" href="index.html">
+                <a class="nav-link" href="{{ route('admin.reports') }}">
                 <i class="fa-sharp fa-solid fa-notes-medical"></i>
                     <span>Transaction</span></a>
             </li>
@@ -183,7 +167,7 @@
                         <!-- Nav Item - User Information -->
                         <div class="dropdown">
                             <button class="btn btn-info dropdown-toggle me-2 text-capitalize" type="button" id="dropdownMenuButton" data-mdb-toggle="dropdown" aria-expanded="false">
-                            Admin {{ Auth::user()->firstname }} 
+                            {{ Auth::user()->firstname }} 
                             <img id="showImage" src="{{ (!empty(Auth::user()->photo))? url('upload/admin_profile/'.Auth::user()->photo):url('images/avatar/profile.jpg') }}" class="rounded-circle" height="22" alt="">
                         </button>
                         <ul class="dropdown-menu" aria-labelledby="dropdownMenuButton">
@@ -214,7 +198,7 @@
 
                                 <!-- Card Body -->
                                 <div class="card-body">
-                                    <table id="example" class="table table-striped">
+                                    <table id="example" class="table">
                                         <thead class="table-info">
                                             <tr>
                                             <th scope="col"><p class="fw-bold">#</p></th>
@@ -231,12 +215,12 @@
                                                     <th scope="row">{{$loop->iteration }}</th>
                                                     <td>{{ $treats->name }} </td>
                                                     <td>
-                                                        <img src="{{ asset($treats->image) }}" class="card-img-top" style="height: 10vh; width: 30%;" alt="...">
+                                                        <img src="{{ asset($treats->image) }}" class="card-img-top" style="height: 8vh; width: 20%;" alt="...">
                                                     </td>
                                                     <td>&#8369; {{ $treats->price }}</td>
                                                     <td>
-                                                    <a href="#" type="button" title="View Treatments" class="btn btn-info btn-sm"><i class="far fa-eye"></i></a>
-                                                        <a href="{{ url('/treatments/'. $treats->treatment_id . '/edit') }}" button type="button" title="Edit treatments" class="btn btn-success btn-sm"><i class="fas fa-pen"></i></button></a>
+                                                    
+                                                        <a href="{{ url('/treatments/'. $treats->treatment_id . '/edit') }}" button type="button" title="Edit treatments" class="btn btn-info btn-sm"><i class="fas fa-pen"></i></button></a>
                                                         <!-- <button type="button" class="btn btn-danger btn-sm" data-bs-toggle="modal" data-bs-target="#exampleModal"><i class="far fa-trash-can fa-xs"></i></button> -->
                                                    
                                                         <!-- Modal -->

@@ -17,6 +17,8 @@
     <!-- MDB -->
     <link href="https://cdnjs.cloudflare.com/ajax/libs/mdb-ui-kit/6.2.0/mdb.min.css" rel="stylesheet"/>
 
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.5/font/bootstrap-icons.css">
+
 </head>
 <body>
 
@@ -86,36 +88,52 @@
 
         <!-- section -->
         <section>
-            <div class="container-fluid mt-5">
-                <div class="card bg-light shadow">
-                    <div class="text-center">
-                        <h3 class="text-dark mt-5 display-5">Our Products</h3>
-                    </div>
-                    <div class="card-body">
-                        <div class="container text-center">
-                            <div class="row">
-                                <div class="col">
-                                    @foreach ($products as $product)
-                                    <a href="{{ url('/show/product/'.$product->id) }}">
-                                        <div class="card text-start shadow border border-info me-3 mb-3 bg-image hover-overlay ripple shadow-1-strong rounded" data-mdb-ripple-color="light"
-                                            style="width: 18rem; display:inline-block;">
-                                            <img src="{{ asset($product->image) }}" class="card-img-top" style="height: 30vh;" alt="...">
-                                            <div class="mask" style="background-color: hsla(0, 0%, 98%, 0.35)"></div>
-                                            <div class="card-body">
-                                                <p class="card-title text-center fw-bold ">{{$product->name }}</p>
-                                            </div>
+    <div class="container-fluid mt-5">
+        <div class="card bg-light shadow">
+            <div class="text-center">
+                <h3 class="text-dark mt-5 display-5">Our Products</h3>
+            </div>
+            <div class="card-body">
+                <div class="container text-center">
+                    <div class="row">
+                        <div class="col">
+                        @foreach ($products as $product)
+                            @if ($totalQuantityById[$product->id] ?? 0 > 0)
+                                <a href="{{ url('/show/product/'.$product->id) }}">
+                            @endif
+                            <div class="card text-start shadow border border-info me-3 mb-3 bg-image hover-overlay ripple shadow-1-strong rounded" data-mdb-ripple-color="light" style="width: 18rem; display:inline-block;" @if ($totalQuantityById[$product->id] ?? 0 <= 0) disabled @endif>
+                                <div class="product-image-container">
+                                    <img src="{{ asset($product->image) }}" class="card-img-top" style="height: 30vh;" alt="...">
+                                </div>
+                                <div class="mask" style="background-color: hsla(0, 0%, 98%, 0.35)"></div>
+                                <div class="card-body">
+                                    <p class="card-title text-center fw-bold">{{ $product->name }}</p>
+                                    @if ($totalQuantityById[$product->id] ?? 0 > 0)
+                                        <p class="text-center">Available Stock: {{ $totalQuantityById[$product->id] }}</p>
+                                        <div class="add-to-cart-btn text-center">
+                                            <button type="button" class="btn btn-info btn-sm"><i class="bi bi-cart-plus-fill"></i> View Details</button>
                                         </div>
-                                    </a>
-                                    @endforeach
+                                    @else
+                                        <p class="text-center">Stock Not Available</p>
+                                    @endif
                                 </div>
                             </div>
-                            <div class="pagination mt-5 justify-content-center fw-bold">{{ $products->links() }}</div>
+                            @if ($totalQuantityById[$product->id] ?? 0 > 0)
+                                </a>
+                            @endif
+                        @endforeach
+
+
+
+
                         </div>
                     </div>
+                    <div class="pagination mt-5 justify-content-center fw-bold">{{ $products->links() }}</div>
                 </div>
             </div>
-        </section>
-
+        </div>
+    </div>
+</section>
 
         <!-- Footer -->
             <footer class="bg-dark text-center text-white" style="margin-top: 120px;">
@@ -231,6 +249,9 @@
             <!-- Copyright -->
         </footer>
         <!-- Footer -->
+        <script src="/js/addtocart.js"></script>
+
+       
 
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.bundle.min.js"></script>
     

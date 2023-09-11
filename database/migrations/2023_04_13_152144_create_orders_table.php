@@ -18,10 +18,7 @@ return new class extends Migration
             $table->string('firstname')->nullable();
             $table->string('email')->nullable();
             $table->string('phone_number')->nullable();
-            $table->string('product_name')->nullable();
-            $table->string('product_image')->nullable();
-            $table->string('quantity')->nullable();
-            $table->string('price')->nullable();
+            $table->string('total')->nullable();
             $table->string('status')->nullable()->default(0)->comment("0 = pending  1 = confirm 2 = Taken");
             $table->timestamps();
         });

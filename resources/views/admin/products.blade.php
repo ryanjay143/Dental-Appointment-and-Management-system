@@ -34,7 +34,8 @@
 
     <script defer src="/js/script.js"></script>
     <link rel="stylesheet" href="https://cdn.datatables.net/1.13.4/css/dataTables.bootstrap5.min.css">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/5.2.0/css/bootstrap.min.css">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.5/font/bootstrap-icons.css">
+    <!-- <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/5.2.0/css/bootstrap.min.css"> -->
 
 </head>
 
@@ -73,22 +74,6 @@
             <div class="sidebar-heading">
                 Interface
             </div>
-             
-            <!-- Nav Item - Utilities Collapse Menu -->
-
-             <!-- Users Managements -->
-             <!-- <li class="nav-item">
-                <a class="nav-link" href="{{ route('users.manage') }}">
-                <i class="fas fa-user fa-2x"></i>
-                    <span>Users Management</span></a>
-            </li> -->
-
-             <!-- Patients -->
-             <!-- <li class="nav-item">
-                <a class="nav-link" href="{{ route('dental.patient') }}">
-                <i class="fa-solid fa-wheelchair"></i>
-                    <span>Patients</span></a>
-            </li> -->
 
           <!-- Nav Item - Pages Collapse Menu -->
             <li class="nav-item">
@@ -122,7 +107,7 @@
 
             <!-- Orders-->
             <li class="nav-item">
-                <a class="nav-link" href="">
+                <a class="nav-link" href="{{ route('orders') }}">
                 <i class="fa-solid fa-bag-shopping"></i>
                     <span>Orders</span></a>
             </li>
@@ -138,21 +123,21 @@
                     <div class="bg-white py-2 collapse-inner rounded">
                         <!-- <h6 class="collapse-header">Custom Components:</h6> -->
                         <a class="collapse-item" href="{{ route('category.products') }}"><i class="fa fa-list-alt" aria-hidden="true"></i> Categories</a>
-                        <a class="collapse-item" href="#"><i class="fab fa-product-hunt" aria-hidden="true"></i> Dental Products</a>
+                        <a class="collapse-item" href="{{ route('product.view') }}"><i class="fab fa-product-hunt" aria-hidden="true"></i> Dental Products</a>
                     </div>
                 </div>
             </li>
 
             <!-- Nav Item - Charts -->
             <li class="nav-item">
-                <a class="nav-link" href="index.html">
+                <a class="nav-link" href="{{ route('payment') }}">
                     <i class="fa-sm fw-bold fa-2x">₱</i>
                     <span>Manage Payment</span></a>
             </li>
 
             <!-- Nav Item - Tables -->
             <li class="nav-item">
-                <a class="nav-link" href="index.html">
+                <a class="nav-link" href="{{ route('admin.reports') }}">
                 <i class="fa-sharp fa-solid fa-notes-medical"></i>
                     <span>Transaction</span></a>
             </li>
@@ -220,10 +205,11 @@
                                         <thead class="table-info">
                                             <tr>
                                             <th scope="col">#</th>
-                                            <th scope="col">Category Name</th>
                                             <th scope="col">Product Name</th>
                                             <th scope="col">Photo</th>
                                             <th scope="col">Price</th>
+                                            <th scope="col">Available Stock</th>
+                                            <!-- <th scope="col">Add Stock</th> -->
                                             <th scope="col">Action</th>
                                             </tr>
                                         </thead>
@@ -231,16 +217,88 @@
                                             @foreach ($products as $product)
                                                 <tr>
                                                     <th scope="row">{{$loop->iteration}}</th>
-                                                    <td>{{ $product->category->name}}</td>
                                                     <td>{{ $product->name}}</td>
                                                     <td>
                                                         <img src="{{ asset($product->image) }}" class="card-img-top" style="height: 8vh; width: 35%;" alt="...">
                                                     </td>
                                                     <td>&#8369; {{ $product->price }}</td>
+                                                    
+                                                       
+                                                        <td>
+                                                            {{ $totalQuantityById[$product->id] ?? 0 }}
+                                                        </td>
+                                                        <!-- <td>
+                                                            <input type="number" class="form-control" min="0" style="width: 100px;" name="stock" id="stock" value="0">
+                                                        </td> -->
                                                     <td>
-                                                        <button type="button" class="btn btn-info btn-sm"><i class="far fa-eye"></i></button>
-                                                        <button type="button" class="btn btn-success btn-sm"><i class="fas fa-pen"></i></button>
-                                                        <button type="button" class="btn btn-danger btn-sm"><i class="far fa-trash-can"></i></button>
+                                                        <button type="button" class="btn btn-info btn-sm" data-bs-toggle="modal" data-bs-target="#exampleModal{{ $product->id }}"><i class="fas fa-pen"></i></button>
+                                                        <div class="modal fade" id="exampleModal{{ $product->id }}" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+                                                            <div class="modal-dialog modal-xl">
+                                                                <div class="modal-content">
+                                                                    <div class="modal-header">
+                                                                        <h1 class="modal-title fs-5" id="exampleModalLabel">Product Details</h1>
+                                                                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                                                                    </div>
+                                                                    <div class="modal-body">
+                                                                        <form action="{{ route('product.details') }}" method="post">
+                                                                            @csrf
+                                                                            <input type="hidden" name="product_id" value="{{ $product->id }}">
+                                                                            <p class="fw-bold">Total Available Stocks: {{ $totalQuantityById[$product->id] ?? 0 }}</p>
+                                                                            <div class="container">
+                                                                                <div class="card mb-5" style="width: 28rem;">
+                                                                                    <div class="card-body">
+                                                                                        <div class="mb-3">
+                                                                                            <label for="product_name" class="form-label">Product Name</label>
+                                                                                            <input type="text" class="form-control" id="product_name" readonly value="{{ $product->name }}">
+                                                                                        </div>
+                                                                                        <div class="mb-3">
+                                                                                            <label for="exp_date" class="form-label">Expiration Date</label>
+                                                                                            <input type="date" class="form-control" id="exp_date" name="exp_date" placeholder="Expiration Date" required>
+                                                                                        </div>
+                                                                                        <div class="mb-3">
+                                                                                            <label for="qty" class="form-label">Input Stocks</label>
+                                                                                            <input type="number" class="form-control" id="qty" name="qty" min="1" value="1" placeholder="Quantity" required>
+                                                                                        </div>
+                                                                                        <div class="d-grid gap-2">
+                                                                                            <button class="btn btn-info btn-sm" type="submit"><i class="bi bi-plus-circle"></i> Add Stock</button>
+                                                                                        </div>
+                                                                                    </div>
+                                                                                </div>
+                                                                            </div>
+                                                                        </form>
+                                                                        <!-- Table for Product Details -->
+
+                                                                        <table class="table table-bordered">
+                                                                            <thead class="table-info">
+                                                                                <tr>
+                                                                                    <th scope="col">Batch No.</th>
+                                                                                    <th scope="col">Expiration Date</th>
+                                                                                    <th scope="col">Date Re-Stock</th>
+                                                                                    <th scope="col">Available Stocks</th>
+                                                                                </tr>
+                                                                            </thead>
+                                                                            <tbody>
+                                                                                @if (count($productDetails[$product->id]) === 0)
+                                                                                    <tr>
+                                                                                        <td class="text-center" colspan="4">No Product Details Available</td>
+                                                                                    </tr>
+                                                                                @else
+                                                                                    @foreach ($productDetails[$product->id] as $detail)
+                                                                                        <tr>
+                                                                                            <td>{{ $loop->iteration }}</td>
+                                                                                            <td>{{ date("F d, Y", strtotime($detail->exp_date)) }}</td>
+                                                                                            <td>{{ date("F d, Y", strtotime($detail->created_at)) }}</td>
+                                                                                            <td>{{ $detail->qty }}</td>
+                                                                                        </tr>
+                                                                                    @endforeach
+                                                                                @endif
+                                                                            </tbody>
+                                                                        </table>
+
+                                                                    </div>
+                                                                </div>
+                                                            </div>
+                                                        </div>
                                                     </td>
                                                 </tr>
                                             @endforeach
@@ -289,6 +347,40 @@
     <!-- Page level custom scripts -->
     <script src="/js/demo/chart-area-demo.js"></script>
     <script src="/js/demo/chart-pie-demo.js"></script>
+
+    <script>
+    function addInputField() {
+        var inputFields = document.getElementById('input-fields');
+
+        var newField = document.createElement('div');
+        newField.classList.add('col-md-2', 'mb-3');
+
+        var label = document.createElement('label');
+        label.setAttribute('for', 'formGroupExampleInput');
+        label.classList.add('form-label');
+        label.textContent = 'Example label';
+
+        var input = document.createElement('input');
+        input.setAttribute('type', 'text');
+        input.setAttribute('name', 'input[]');
+        input.classList.add('form-control');
+        input.setAttribute('placeholder', 'Example input placeholder');
+
+        newField.appendChild(label);
+        newField.appendChild(input);
+
+        inputFields.appendChild(newField);
+    }
+
+    function removeInputField() {
+        var inputFields = document.getElementById('input-fields');
+        var lastField = inputFields.lastChild;
+
+        if (lastField) {
+            inputFields.removeChild(lastField);
+        }
+    }
+</script>
 
     <!-- MDB -->
     <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/mdb-ui-kit/6.2.0/mdb.min.js"></script>

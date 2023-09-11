@@ -81,10 +81,10 @@
         <div class="bg-image d-flex justify-content-center align-items-center" style="background-image: url('/images/dental.jpeg'); height: 100vh;">
             <div class="mask" style="background-color: rgba(0, 0, 0, 0.6);">
                 <div class="carousel-caption">
-                    <h1 class="text-light text-start display-2 fst-normal">Welcome to our <br> <strong class="text-info fw-bold display-1">Dental Appointment and Management System</strong></h1>
+                    <h1 class="text-light text-start display-2  fst-normal">Welcome to our <br> <strong class="text-info fw-bold display-1">Dental Appointment and Management System</strong></h1>
                     <p class="text-start text-light fst-normal">Because of your smile, you make life more beautiful.</p>
                     <button type="button" class="btn btn-info float-start me-3 mb-11 data-mdb-ripple-color=dark" data-bs-toggle="modal" data-bs-target="#exampleModal"><i class="fas fa-calendar-check fa-lg me-2"></i> Set An Appointment</button>
-                    <a href="{{ route('userProducts') }}" button type="button" class="btn btn-light float-start ">Our Products</button></a>
+                    <a href="{{ route('userProducts') }}" button type="button" class="btn btn-light float-start text-info">Buy Product</button></a>
                 </div>
             </div>
         </div>

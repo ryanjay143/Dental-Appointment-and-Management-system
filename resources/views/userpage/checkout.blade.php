@@ -105,7 +105,7 @@
                                             <div class="card-body">
                                                 <p class="text-start text-dark fw-bold text-uppercase">My Order: <small>{{$order}}</small></p><hr>
                                                     <table class="table">
-                                                    <form action="{{ route('orderDetails') }}" method="POST">
+                                                    <form action="{{ url('orderDetails') }}" method="POST">
                                                         @csrf
                                                         @php $total = 0 @endphp
                                                         @foreach($viewOrder as $order)
@@ -138,14 +138,15 @@
                                                                 <p class="text-start text-muted ">Total: </p>
                                                             </div>
                                                             <div class="col">
-                                                                <p class="text-end">&#8369; {{$total}}</p>
+                                                                <input type="text" hidden="" name="total" id="total" value="{{$total}}">
+                                                                <p class="text-end">{{$total}}</p>
                                                             </div>
                                                         </div>
                                                     </div>
                                             </div>
                                         </div>
                                         <div class="note note-info mb-3 text-start">
-                                            <strong>Note:</strong> You can pay at the Clinic! 
+                                            <strong>Note:</strong> You can pay through the clinic! or via Gcash
                                         </div>
                                     </div>
                                 </div>

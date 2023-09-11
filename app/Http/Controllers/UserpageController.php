@@ -6,10 +6,13 @@ use Illuminate\Http\Request;
 use App\Models\Treatments;
 use App\Models\User;
 use App\Models\Cart;
+use App\Models\Order;
+use App\Models\OrderDetails;
 use App\Models\AppointmentModel;
 use App\Models\PersonalInfoModel;
 use App\Models\Category;
 use App\Models\Products;
+use App\Models\ProductDetails;
 use Illuminate\Support\Facades\Auth;
 use RealRashid\SweetAlert\Facades\Alert;
 
@@ -108,7 +111,8 @@ class UserpageController extends Controller
                 'weight' => 'required',
                 'height' => 'required',
             ]);
-    
+            $user = auth()->user();
+            $cart = cart::where('firstname',$user->firstname)->count();
             $p_info = new PersonalInfoModel([
                 'Personal_information' => Auth::user()->id,
                 'month' => $info->month,
@@ -129,7 +133,7 @@ class UserpageController extends Controller
     
             $p_info->save();
             Alert::success('Personal Information Success');
-            return redirect()->route('home');
+            return redirect()->route('userApp',compact('cart'));
         }
         else 
         {
@@ -139,10 +143,46 @@ class UserpageController extends Controller
     }
     public function products()
     {
+        if(Auth::id())
+        {
+        $user = auth()->user();
+        $cart = cart::where('firstname',$user->firstname)->count();
         $products = Products::with('category')->orderBy('id','asc')->paginate(8);
         $categories = Category::with('products')->get();
-        return view('landing/products',compact('products', 'categories'));
+
+        $productDetails = [];
+        $totalQuantityById = [];
+
+        foreach ($products as $product) {
+            $details = ProductDetails::where('product_id', $product->id)->get();
+            $productDetails[$product->id] = $details;
+
+            $totalQuantity = $details->sum('qty');
+            $totalQuantityById[$product->id] = $totalQuantity;
+
+            return view('userpage/userProducts',compact('products', 'categories','cart','productDetails', 'totalQuantityById'));
+        }
     }
+        else
+        {
+            $products = Products::with('category')->orderBy('id','asc')->paginate(8);
+            $categories = Category::with('products')->get();
+
+            $productDetails = [];
+            $totalQuantityById = [];
+
+        foreach ($products as $product) {
+            $details = ProductDetails::where('product_id', $product->id)->get();
+            $productDetails[$product->id] = $details;
+
+            $totalQuantity = $details->sum('qty');
+            $totalQuantityById[$product->id] = $totalQuantity;
+
+            return view('landing/products',compact('products', 'categories'));
+        }
+        }
+    }
+        
     public function viewProduct($id)
     {
         $category = Category::with('products')->get();
@@ -229,7 +269,18 @@ class UserpageController extends Controller
         $cart = cart::where('firstname',$user->firstname)->count();
         $products = Products::with('category')->orderBy('id','asc')->paginate(8);
         $categories = Category::with('products')->get();
-        return view('userpage/userProducts',compact('products', 'categories','cart'));
+
+        $productDetails = [];
+        $totalQuantityById = [];
+
+        foreach ($products as $product) {
+            $details = ProductDetails::where('product_id', $product->id)->get();
+            $productDetails[$product->id] = $details;
+
+            $totalQuantity = $details->sum('qty');
+            $totalQuantityById[$product->id] = $totalQuantity;
+        }
+        return view('userpage/userProducts',compact('products', 'categories','cart','productDetails', 'totalQuantityById'));
     }
 
     public function showProduct($id)
@@ -260,10 +311,17 @@ class UserpageController extends Controller
     public function appointmentTable()
     {
         $user = auth()->user();
+        $pendingOrder = Order::where('firstname',$user->firstname)->whereIn('status',[0,1])->get();
+        $paidOrder = Order::where('firstname',$user->firstname)->where('status',2)->get();
+        $paidorder = Order::where('firstname',$user->firstname)->where('status',2)->count();
+        $pendingOrders = Order::where('firstname',$user->firstname)->whereIn('status',[0,1])->count();
         $cart = cart::where('firstname',$user->firstname)->count();
-        $appointment = AppointmentModel::with('user')->whereIn('status',[0,1,2])->where('user_id',$user->id)->get();
+        $appointment = AppointmentModel::with('user')->whereIn('status',[0,1,2,4])->where('user_id',$user->id)->get();
+        $pendingApp = AppointmentModel::with('user')->whereIn('status',[0])->where('user_id',$user->id)->count();
+        $doneApp = AppointmentModel::with('user')->whereIn('status',[3])->where('user_id',$user->id)->count();
+        $doneAppointment = AppointmentModel::with('user')->whereIn('status',[3])->where('user_id',$user->id)->get();
         $treatment = Treatments::with('appointments')->get();
-        return view('userpage/appointmentTable',compact('appointment','treatment','cart'));
+        return view('userpage/appointmentTable',compact('appointment','treatment','cart','pendingApp','pendingOrder','pendingOrders','doneApp','paidorder','paidOrder','doneAppointment'));
     }
 
     public function done()
@@ -275,10 +333,15 @@ class UserpageController extends Controller
         return view('userpage/doneAppointment',compact('appointment','treatment','cart'));
     }
 
-    public function showcart()
+    public function showcart(Request $request)
     {
         if(Auth::id())
         {
+
+            $productId = $request->input('productname[]');
+            $newQuantity = $request->input('quantity[]');
+
+           
             $user = auth()->user();
             $viewCart=cart::where('firstname',$user->firstname)->get();
             $cart = cart::where('firstname',$user->firstname)->count();
@@ -298,5 +361,23 @@ class UserpageController extends Controller
         Alert::success('Delete Cart Successfully');
         return redirect()->back();
     }
+
+    public function cancelApp()
+    {
+        $user = auth()->user();
+        $data = AppointmentModel::where('user_id',$user->id)->update(['status' => 4]);
+      
+        Alert::success('Cancel Appointment Successfully');
+        return redirect()->back();
+    }
     
+    public function myOrder($id)
+    {
+        $user = auth()->user();
+        $order = Order::find($id);
+        $subtotal = OrderDetails::where('order_id',$order->id)->sum('subTotal');
+        $viewOrder = OrderDetails::where('order_id',$order->id)->get();
+        $cart = cart::where('firstname',$user->firstname)->count();
+        return view('userpage/viewOrder',compact('cart','viewOrder','subtotal'));
+    }
 }

@@ -28,6 +28,13 @@
     <!-- Custom styles for this template-->
     <link href="/css/sb-admin-2.min.css" rel="stylesheet">
 
+    <script defer src="https://code.jquery.com/jquery-3.5.1.js"></script>
+    <script defer src="https://cdn.datatables.net/1.13.4/js/jquery.dataTables.min.js"></script>
+    <script defer src="https://cdn.datatables.net/1.13.4/js/dataTables.bootstrap5.min.js"></script>
+
+    <script defer src="/js/script.js"></script>
+    <link rel="stylesheet" href="https://cdn.datatables.net/1.13.4/css/dataTables.bootstrap5.min.css">
+   
 </head>
 
 <body id="page-top">
@@ -49,9 +56,9 @@
             <!-- Divider -->
             <hr class="sidebar-divider my-0">
 
-            <!-- Nav Item - Dashboard -->
-            <li class="nav-item">
-                <a class="nav-link" href="{{ route('dentist.dashboard') }}">
+           <!-- Nav Item - Dashboard -->
+           <li class="nav-item ">
+                <a class="nav-link " href="{{ route('dentist.dashboard') }}">
                     <i class="fas fa-fw fa-tachometer-alt "></i>
                     <span>Dashboard</span></a>
             </li>
@@ -68,39 +75,45 @@
             <!-- Nav Item - Utilities Collapse Menu -->
              <!-- Dentist- Dashboard -->
              <li class="nav-item">
-                <a class="nav-link" href="index.html">
+                <a class="nav-link" href="{{ route('calendar') }}">
                 <i class="fas fa-calendar-alt"></i>
                     <span>Calendar</span></a>
+            </li>
+
+            <li class="nav-item">
+                <a class="nav-link" href="{{ route('dentist.schedule') }}">
+                <i class="fas fa-calendar-alt"></i>
+                    <span>Create Schedule</span></a>
             </li>
 
             
            <!-- Dentist- Dashboard -->
            <li class="nav-item active">
-                <a class="nav-link  bg-info" href="{{ route('dental.patients') }}">
+                <a class="nav-link bg-info" href="{{ route('dental.patients') }}">
                 <i class="fas fa-user-edit"></i>
                     <span>Patients list</span></a>
             </li>
 
 
             <!-- Nav Item - Pages Collapse Menu -->
-            <li class="nav-item">
+            <!-- <li class="nav-item">
                 <a class="nav-link" href="index.html">
                     <i class="fab fa-product-hunt"></i>
                     <span>Messages</span></a>
-            </li>
+            </li> -->
 
             <!-- Nav Item - Charts -->
             <li class="nav-item">
-                <a class="nav-link" href="index.html">
+                <a class="nav-link" href="{{ route('payment.info') }}">
                     <i class="fa-sm fw-bold">₱</i>
                     <span>Payment Information</span></a>
             </li>
 
             <!-- Nav Item - Tables -->
             <li class="nav-item">
-                <a class="nav-link" href="index.html">
+                <a class="nav-link" href="{{ route('dental.reports') }}">
                 <i class="fas fa-cog"></i>
-                    <span>Settings</span></a>
+                    <span>Reports</span></a>
             </li>
 
             <!-- Divider -->
@@ -130,19 +143,7 @@
                         <i class="fa fa-bars"></i>
                     </button>
 
-                    <!-- Topbar Search -->
-                    <form
-                        class="d-none d-sm-inline-block form-inline mr-auto ml-md-3 my-2 my-md-0 mw-100  navbar-search">
-                        <div class="input-group">
-                            <input type="text" class="form-control bg-light border border-info small" placeholder="Search for..."
-                                aria-label="Search" aria-describedby="basic-addon2">
-                            <div class="input-group-append">
-                                <button class="btn btn-info" type="button">
-                                    <i class="fas fa-search fa-sm"></i>
-                                </button>
-                            </div>
-                        </div>
-                    </form>
+                   
 
                     <!-- Topbar Navbar -->
                     <ul class="navbar-nav ml-auto">
@@ -170,11 +171,11 @@
                                 </form>
                             </div>
                         </li>                                             
-                        <div class="topbar-divider border border-info d-none d-sm-block"></div>
+                       
 
                         <!-- Nav Item - User Information -->
                         <div class="dropdown">
-                            <button class="btn btn-info dropdown-toggle" type="button" id="dropdownMenuButton" data-mdb-toggle="dropdown" aria-expanded="false">
+                            <button class="btn btn-info dropdown-toggle btn-sm" type="button" id="dropdownMenuButton" data-mdb-toggle="dropdown" aria-expanded="false">
                             Hi Dr. {{ Auth::user()->firstname }}
                             <img src="{{ (!empty(Auth::user()->photo))? url('upload/dentist_profile/'.Auth::user()->photo):url('images/avatar/empty.png') }}" class="rounded-circle" height="22" alt="">
                         </button>
@@ -199,50 +200,40 @@
                             <div class="card shadow mb-4">
                                 <!-- Card Header - Dropdown -->
                                 <div
-                                    class="card-header py-3 d-flex flex-row align-items-center justify-content-between">
-                                    <h6 class="m-0 font-weight-bold text-primary">Patint's list</h6>
+                                    class="card-header bg-info py-3 d-flex flex-row align-items-center justify-content-between">
+                                    <h6 class="m-0 font-weight-bold text-light">Patient's list</h6>
                                     
                                 </div>
                                 <!-- Card Body -->
                                 <div class="card-body">
-                                <table class="table ">
+                                <table id="example" class="table ">
                                         <thead class="table-info">
                                             <tr>
                                             <th scope="col">#</th>
                                             <th scope="col">Photo</th>
-                                            <th scope="col">Firstname</th>
-                                            <th scope="col">Lastname</th>
+                                            <th scope="col">Patient Name</th>
                                             <th scope="col">Email</th>
-                                            <th scope="col">Location</th>
+                                            <th scope="col">Contact Number</th>
                                             <th scope="col">Action</th>
                                             </tr>
                                         </thead>
                                         <tbody>
-                                            @if(count($pinfo) > 0)
-                                                @foreach ($pinfo as $p)
+                                            
+                                                @foreach ($patient as $p)
                                                 <tr>
                                                     <th scope="row">{{$loop->iteration }}</th>
                                                     <td>
-                                                        <img src="{{ asset($p->photo) }}" width="50" height="50" class="img img-responsive" alt="...">
+                                                        <img src="{{ (!empty($p->user->photo))? url('upload/patient_profile/'.$p->user->photo):url('images/avatar/profile.jpg') }}" class="rounded-circle" style="height: 8vh; width: 35%;" alt="...">
                                                     </td>
-                                                    <td>{{$p->firsname }}</td>
-                                                    <td>{{$p->lastname }}</td>
-                                                    <td>{{$p->email }}</td>
-                                                    <td>{{$p->location }} {{$p->state }} {{$p->zip_code }}</td>
+                                                    <td>{{$p->user->firstname }} {{$p->user->lastname }}</td>
+                                                    <td>{{$p->user->email }}</td>
+                                                    <td> {{$p->user->phone_number }}</td>
                                                     <td>
-                                                        <button type="button" class="btn btn-secondary btn-sm"><i class="far fa-eye fa-xs"></i></button>
-                                                        <button type="button" class="btn btn-success btn-sm"><i class="far fa-edit fa-xs"></i></i></button>
-                                                        <button type="button" class="btn btn-danger btn-sm"><i class="fas fa-trash-alt fa-xs"></i></i></button>
+                                                        <a href="{{ url('myPatients/'.$p->id) }}" type="button" class="btn btn-info btn-sm text-capitalize">View Records</a>
                                                     </td>
                                                 </tr>
                                                 @endforeach
-                                            @else
-                                                <tr>
-                                                    <td colspan="7">
-                                                       <p class="text-center p-1">Dentis no available</p>
-                                                    </td>
-                                                </tr>
-                                            @endif
+                                            
                                         </tbody>
                                     </table>
                                 </div>
@@ -270,25 +261,7 @@
         <i class="fas fa-angle-up"></i>
     </a>
 
-    <!-- Logout Modal
-    <div class="modal fade" id="logoutModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel"
-        aria-hidden="true">
-        <div class="modal-dialog" role="document">
-            <div class="modal-content">
-                <div class="modal-header">
-                    <h5 class="modal-title" id="exampleModalLabel">Ready to Leave?</h5>
-                    <button class="close" type="button" data-dismiss="modal" aria-label="Close">
-                        <span aria-hidden="true">×</span>
-                    </button>
-                </div>
-                <div class="modal-body">Select "Logout" below if you are ready to end your current session.</div>
-                <div class="modal-footer">
-                    <button class="btn btn-secondary" type="button" data-dismiss="modal">Cancel</button>
-                    <a class="btn btn-primary" href="login.html">Logout</a>
-                </div>
-            </div>
-        </div>
-    </div> -->
+  
 
     <!-- Bootstrap core JavaScript-->
     <script src="/vendor/jquery/jquery.min.js"></script>

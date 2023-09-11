@@ -2,8 +2,10 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <meta http-equiv="X-UA-Compatible" content="IE=edge">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <!-- <meta http-equiv="X-UA-Compatible" content="IE=edge"> -->
+    
+    <meta name="csrf-token" content="{{ csrf_token() }}">
+
     <title>View Cart</title>
     <link rel="stylesheet" href="/css/style.css">
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/css/bootstrap.min.css">
@@ -21,8 +23,7 @@
     <script defer src="https://cdn.datatables.net/1.13.4/js/jquery.dataTables.min.js"></script>
     <script defer src="https://cdn.datatables.net/1.13.4/js/dataTables.bootstrap5.min.js"></script>
 
-    <script defer src="/js/script.js"></script>
-    <script src="/js/store.js"></script>
+    
     <link rel="stylesheet" href="https://cdn.datatables.net/1.13.4/css/dataTables.bootstrap5.min.css">
    
     <script defer src="https://code.jquery.com/jquery-3.5.1.js"></script>
@@ -30,8 +31,11 @@
     <script defer src="https://cdn.datatables.net/1.13.4/js/dataTables.bootstrap5.min.js"></script>
 
     <script defer src="/js/script.js"></script>
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
     <script src="/js/store.js"></script>
-    <link rel="stylesheet" href="https://cdn.datatables.net/1.13.4/css/dataTables.bootstrap5.min.css">
+
+    
+    <!-- <link rel="stylesheet" href="https://cdn.datatables.net/1.13.4/css/dataTables.bootstrap5.min.css"> -->
 
 </head>
 <body>
@@ -101,18 +105,19 @@
                     <div class="card-body">
                         <form action="{{ route('order') }}" method="POST">
                             @csrf
-                        <table id="example" class="table border-info">
-                            <thead class="table-info">
-                                <tr>
-                                    <th scope="col">#</th>
-                                    <th scope="col">Product Name</th>
-                                    <th scope="col">Photo</th>
-                                    <th scope="col">Price</th>
-                                    <th scope="col">Quantity</th>
-                                    <th scope="col">Sub Total</th>
-                                    <th scope="col">Action</th>
-                                </tr>
-                            </thead>
+                            <div class="table-responsive">
+                            <table id="example" class="table border-info">
+                                <thead class="table-info">
+                                    <tr>
+                                        <th scope="col">#</th>
+                                        <th scope="col">Product Name</th>
+                                        <th scope="col">Photo</th>
+                                        <th scope="col">Price</th>
+                                        <th scope="col">Quantity</th>
+                                        <th scope="col">Sub Total</th>
+                                        <th scope="col">Action</th>
+                                    </tr>
+                                </thead>
                                 <tbody>
                                     @php $total = 0 @endphp
                                     @foreach ($viewCart as $carts)
@@ -126,30 +131,29 @@
                                                     <input type="text" name="image[]" value="{{ asset($carts->product_image) }}" hidden="">
                                                     <img src="{{ asset($carts->product_image) }}" class="card-img-top" style="height: 8vh; width: 35%;" alt="...">
                                                 </td>
-                                                <td data-base-price id="base-price">
-                                                    <input type="text" name="price[]" value="{{$carts->price}}" hidden="">
-                                                    &#8369; {{$carts->price}}</td>
                                                 <td>
-                                                    <form action="" method="post">
-                                                        <div>
-                                                            <button onClick="console.log('Clicked the minus button')">-</button>
-                                                                <input data-input-btn type="text" class="form-control border border-info" id="quantity" min="1" name="quantity[]" style="width: 90px;" value="{{$carts->quantity}}" >
-                                                                <input type="text" class="form-control border border-info" id="quantity" min="1" value="{{$carts->quantity}}" style="width: 90px;" hidden="">
-                                                            <button onClick="console.log('Clicked the plus button')">+</button>
-                                                        </div>
-                                                        
-                                                    </form>
-                                                    
+                                                    <input id="base-price{{$carts->id}}" data-base-price type="hidden" name="price[]" value="{{$carts->price}}">
+                                                    <span>&#8369; {{$carts->price}}</span>
                                                 </td>
-                                                <td data-subtotal>&#8369; {{$carts->price * $carts->quantity}}</td>
+
+                                                <td>
+                                                    <div class="quantity-control">
+                                                        <button type="button" class="quantity-decrement fw-bold btn btn-info btn-sm">-</button>
+                                                        <input readonly type="number" class="form-control form-control-sm border border-info quantity-input" min="1" name="quantity[]" style="width: 90px; display: inline-block" data-product-id="{{ $carts->id }}" data-update-url="{{ route('updateQuantity') }}" value="{{ $carts->quantity }}">
+                                                        <button type="button" class="quantity-increment fw-bold btn btn-info btn-sm">+</button>
+                                                    </div>
+                                                </td>
+                                                <td data-subtotal>
+                                                    <p data-subtotal class="text-muted text-start">&#8369; <span id="subtotal{{$carts->id}}">{{ $carts->price * $carts->quantity }}</span></p>
+                                                </td>
                                                 <td>
                                                     <a href="{{ url('deleteCart',$carts->id) }}" class="btn btn-danger btn-sm" type="submit"><i class="far fa-trash-can"></i></a>
                                                 </td>
                                             </tr>
                                         @endforeach
                                 </tbody>
-                        </table>
-                        
+                            </table>
+                            </div>
                         <div class="container text-center">
                             <div class="row">
                                 <div class="col">
@@ -159,7 +163,7 @@
                                             <div class="container text-center">
                                                 <div class="row row-cols-2">
                                                     <div class="col">
-                                                        <p class="fw-bold  text-start">Total Carts:</p>
+                                                        <p class="fw-bold  text-start" name="total">Total Carts:</p>
                                                     </div>
                                                     <div class="col">
                                                         <p class="text-start">{{$cart}}</p>
@@ -168,13 +172,13 @@
                                                         <p class="fw-bold  text-start">Payment Method:</p>
                                                     </div>
                                                     <div class="col">
-                                                        <p class="text-success text-start">Gcash or Direct Pay</p>
+                                                        <p class="text-success text-start">Gcash or Cash Payment</p>
                                                     </div>
                                                     <div class="col">
                                                         <p class="fw-bold text-start">Total:</p>
                                                     </div>
-                                                    <div class="col">
-                                                        <p data-total-price class="text-muted text-start">&#8369; {{$total}}</p>
+                                                    <div data-total-price class="col">
+                                                        <p data-total-price class="text-muted text-start">&#8369; <span id="total">{{ $total }}</span></p>
                                                     </div><hr><hr>
                                                     <div class="col-12">
                                                         <div class="d-grid gap-2 d-md-block">
@@ -316,7 +320,17 @@
     
     <!-- MDB -->
     <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/mdb-ui-kit/6.2.0/mdb.min.js"></script>
-
     
+
+
+
+
+
+
+
+
+
+
+
 </body>
 </html>

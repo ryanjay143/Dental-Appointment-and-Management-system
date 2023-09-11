@@ -78,9 +78,15 @@
             <!-- Nav Item - Utilities Collapse Menu -->
              <!-- Dentist- Dashboard -->
              <li class="nav-item">
-                <a class="nav-link" href="index.html">
+                <a class="nav-link" href="{{ route('calendar') }}">
                 <i class="fas fa-calendar-alt"></i>
                     <span>Calendar</span></a>
+            </li>
+
+            <li class="nav-item">
+                <a class="nav-link" href="{{ route('dentist.schedule') }}">
+                <i class="fas fa-calendar-alt"></i>
+                    <span>Create Schedule</span></a>
             </li>
 
             
@@ -93,26 +99,26 @@
 
 
             <!-- Nav Item - Pages Collapse Menu -->
-            <li class="nav-item">
+            <!-- <li class="nav-item">
                 <a class="nav-link" href="index.html">
                     <i class="fab fa-product-hunt"></i>
                     <span>Messages</span></a>
-            </li>
+            </li> -->
 
             <!-- Nav Item - Charts -->
             <li class="nav-item">
-                <a class="nav-link" href="index.html">
+                <a class="nav-link" href="{{ route('payment.info') }}">
                     <i class="fa-sm fw-bold">₱</i>
                     <span>Payment Information</span></a>
             </li>
 
             <!-- Nav Item - Tables -->
             <li class="nav-item">
-                <a class="nav-link" href="index.html">
+                <a class="nav-link" href="{{ route('dental.reports') }}">
                 <i class="fas fa-cog"></i>
-                    <span>Settings</span></a>
+                    <span>Reports</span></a>
             </li>
-
+            
             <!-- Divider -->
             <hr class="sidebar-divider d-none d-md-block">
 

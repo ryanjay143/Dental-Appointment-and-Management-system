@@ -18,6 +18,33 @@
     <link href="https://cdnjs.cloudflare.com/ajax/libs/mdb-ui-kit/6.2.0/mdb.min.css" rel="stylesheet"/>
 
     <link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/npm/toastify-js/src/toastify.min.css">
+
+
+    <!-- @push('styles')
+  <link href="{{ asset('css/fullcalendar.min.css') }}" rel="stylesheet">
+@endpush
+
+@push('scripts')
+  <script src="{{ asset('js/fullcalendar.min.js') }}"></script>
+@endpush
+
+<div id="calendar"></div>
+
+@push('scripts')
+  <script>
+    document.addEventListener('DOMContentLoaded', function() {
+      var calendarEl = document.getElementById('calendar');
+      var calendar = new FullCalendar.Calendar(calendarEl, {
+        plugins: ['dayGrid'],
+        weekends: false,
+        weekendDays: [1, 2, 3, 4, 5],
+        // other options...
+      });
+      calendar.render();
+    });
+  </script>
+@endpush -->
+
 </head>
 <body>
     @include('sweetalert::alert')
@@ -55,8 +82,8 @@
         </nav>
     </header>
         <nav>
-            <nav class="navbar navbar-expand-lg bg-body-tertiary bg-info">
-                <div class="container-fluid">
+            <nav class="navbar  navbar-expand-lg bg-body-tertiary bg-info">
+                <div class="container-fluid ">
                     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNavAltMarkup" aria-controls="navbarNavAltMarkup" aria-expanded="false" aria-label="Toggle navigation">
                         <span class="navbar-toggler-icon"></span>
                     </button>
@@ -76,65 +103,64 @@
         </nav>
 
         <!-- Background image -->
-        <div class="bg-image d-flex justify-content-center align-items-center" style="background-image: url('/images/dental.jpeg'); height: 100vh;">
-            <div class="mask" style="background-color: rgba(0, 0, 0, 0.6);">
-                <div class="position-relative">
-                    <div class="position-absolute top-50 start-50 translate-middle" style="margin-top: 350px">
-                        <div class="card shadow border border-info border-3" style="width: 30rem;">
-                            <div class="card-body">
-                                <h3 class="text-center mt-3 text-info">Set an Appointment</h3><hr>
-                                @if($errors->any())
-                                        @foreach($errors->all() as $err)
-                                        <p class="text-danger">{{ $err }}</p>
-                                        @endforeach
-                                    @endif
-                                <form action="{{ route('set.appointment') }}" method="POST">
+        <div class="bg-image d-flex justify-content-center align-items-center" style="background-image: url('/images/dental.jpeg'); height: 110vh;">
+            <div class="mask" style="background-color: rgba(0, 0, 0, 0.6);">   
+                <center>
+                    <div class="card mt-5 shadow border border-info border-3" style="width: 30rem; "> <!-- Updated margin-bottom property -->
+                        <div class="card-body">
+                            <h3 class="text-center mt-3 text-info">Set an Appointment</h3>
+                            <hr>
+                            @if($errors->any())
+                                @foreach($errors->all() as $err)
+                                    <p class="text-danger">{{ $err }}</p>
+                                @endforeach
+                            @endif
+                            <form action="{{ route('set.appointment') }}" method="POST">
                                 {!! csrf_field() !!}
-                                    <div class="mb-3">
-                                        <input type="hidden" class="form-control border border-info border-2" id="formGroupExampleInput2" name="user_id" value="{{ Auth::user()->id }}">
+                                <div class="mb-3">
+                                    <input type="hidden" class="form-control border border-info border-2" id="formGroupExampleInput2" name="user_id" value="{{ Auth::user()->id }}">
+                                </div>
+                                <div class="row mb-3 mt-4 ">
+                                    <div class="col">
+                                        <input type="text" class="form-control border border-info" placeholder="First name" aria-label="First name" name="firstname" value="{{ Auth::user()->firstname }}">
                                     </div>
-                                    <div class="row mb-3 mt-4 ">
+                                    <div class="col">
+                                        <input type="text" class="form-control border border-info" placeholder="Last name" aria-label="Last name" name="lastname" value="{{ Auth::user()->lastname }}">
+                                    </div>
+                                </div>
+                                <div class="mb-3">
+                                    <input type="text" class="form-control border border-info border-2" id="formGroupExampleInput2" placeholder="Phone Number" name="phone_num" value="{{ Auth::user()->phone_number }}">
+                                </div>
+                                <div class="col-md-12 mb-3">
+                                    <label for="inputEmail4" class="form-label fw-bold text-start">Choose date and time:</label>
+                                    <div class="row mb-3">
                                         <div class="col">
-                                            <input type="text" class="form-control border border-info" placeholder="First name" aria-label="First name" name="firstname" value="{{ Auth::user()->firstname }}">
+                                            <input type="date" class="form-control border border-info" name="date" value="date" id="date" min="{{ now()->format('Y-m-d') }}" required>
                                         </div>
                                         <div class="col">
-                                            <input type="text" class="form-control border border-info" placeholder="Last name" aria-label="Last name" name="lastname" value="{{ Auth::user()->lastname }}">
+                                            <input type="time" class="form-control border border-info" placeholder="Last name" aria-label="Last name" id="time" name="time" value="time" required>
                                         </div>
                                     </div>
-                                    <div class="mb-3">
-                                        <input type="text" class="form-control border border-info border-2" id="formGroupExampleInput2" placeholder="Phone Number" name="phone_num" value="{{ Auth::user()->phone_number }}">
-                                    </div>
-                                    <div class="col-md-12 mb-3">
-                                        <label for="inputEmail4" class="form-label fw-bold">Choose date and time:</label>
-                                        <div class="row mb-3">
-                                            <div class="col">
-                                                <input type="date" class="form-control border border-info" placeholder="First name" aria-label="First name" name="date" value="date">
-                                            </div>
-                                            <div class="col">
-                                                <input type="time" class="form-control border border-info" placeholder="Last name" aria-label="Last name" name="time" value="time">
-                                            </div>
-                                        </div>
-                                    </div>
-                                    
-                                    <select class="form-select mb-3 border border-info border-2" aria-label="Default select example" name="treatment_id" id="treatment_id">
+                                </div>
+                                        
+                                <select class="form-select mb-3 border border-info border-2" aria-label="Default select example" name="treatment_id" id="treatment_id">
                                     <option selected disabled>Select Treatments</option>
-                                        @foreach($treatments as $treat)
-                                            <option value="{{ $treat->treatment_id }}">{{ $treat->name }}</option>
-                                        @endforeach
-                                    </select>
-                                   
-                                    <div class="form-floating mb-3">
-                                        <textarea class="form-control border border-info border-2" placeholder="Leave a comment here" id="floatingTextarea2" name="message" style="height: 100px"></textarea>
-                                        <label for="floatingTextarea2">Message:</label>
-                                    </div>
-                                    <div class="d-grid gap-2">
-                                        <button class="btn btn-info" type="submit">SUBMIT</button>
-                                    </div>
-                                </form>
-                            </div>
+                                    @foreach($treatments as $treat)
+                                        <option value="{{ $treat->treatment_id }}">{{ $treat->name }}</option>
+                                    @endforeach
+                                </select>
+                                    
+                                <div class="form-floating mb-3">
+                                    <textarea class="form-control border border-info border-2" placeholder="Leave a comment here" id="floatingTextarea2" name="message" style="height: 100px"></textarea>
+                                    <label for="floatingTextarea2">Message:</label>
+                                </div>
+                                <div class="d-grid gap-2">
+                                    <button class="btn btn-info" type="submit">SUBMIT</button>
+                                </div>
+                            </form>
                         </div>
                     </div>
-                </div>
+                </center> 
             </div>
         </div>
 
@@ -154,6 +180,8 @@
         @endforeach
         @endif
     </script>
+
+    
 
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.bundle.min.js"></script>
     

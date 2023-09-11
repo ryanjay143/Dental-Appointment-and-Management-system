@@ -42,7 +42,7 @@
             <!-- Sidebar - Brand -->
             <a class="sidebar-brand d-flex align-items-center justify-content-center" href="index.html">
                 <div class="sidebar-brand-icon">
-                <i class="fas fa-user-circle fa-lg text-light"></i>
+                <img id="showImage" src="{{ (!empty(Auth::user()->photo))? url('upload/admin_profile/'.Auth::user()->photo):url('images/avatar/profile.jpg') }}" class="rounded-circle" height="22" alt="">
                 </div>
                 <div class="sidebar-brand-text mx-2">Dental Admin</div>
             </a>
@@ -64,22 +64,6 @@
             <div class="sidebar-heading">
                 Interface
             </div>
-            
-            <!-- Nav Item - Utilities Collapse Menu -->
-
-            <!-- Users Managements -->
-            <!-- <li class="nav-item">
-                <a class="nav-link" href="{{ route('users.manage') }}">
-                <i class="fas fa-user fa-2x"></i>
-                    <span>Users Management</span></a>
-            </li> -->
-
-            <!-- Patients -->
-            <!-- <li class="nav-item">
-                <a class="nav-link" href="{{ route('dental.patient') }}">
-                <i class="fa-solid fa-wheelchair"></i>
-                    <span>Patients</span></a>
-            </li> -->
 
             <!-- Nav Item - Pages Collapse Menu -->
             <li class="nav-item">
@@ -113,7 +97,7 @@
 
             <!-- Orders-->
             <li class="nav-item">
-                <a class="nav-link" href="">
+                <a class="nav-link" href="{{ route('orders') }}">
                 <i class="fa-solid fa-bag-shopping"></i>
                     <span>Orders</span></a>
             </li>
@@ -129,21 +113,21 @@
                     <div class="bg-white py-2 collapse-inner rounded">
                         <!-- <h6 class="collapse-header">Custom Components:</h6> -->
                         <a class="collapse-item" href="{{ route('category.products') }}"><i class="fa fa-list-alt" aria-hidden="true"></i> Categories</a>
-                        <a class="collapse-item" href="#"><i class="fab fa-product-hunt" aria-hidden="true"></i> Dental Products</a>
+                        <a class="collapse-item" href="{{ route('product.view') }}"><i class="fab fa-product-hunt" aria-hidden="true"></i> Dental Products</a>
                     </div>
                 </div>
             </li>
 
             <!-- Nav Item - Charts -->
             <li class="nav-item">
-                <a class="nav-link" href="index.html">
+                <a class="nav-link" href="{{ route('payment') }}">
                     <i class="fa-sm fw-bold fa-2x">₱</i>
                     <span>Manage Payment</span></a>
             </li>
 
             <!-- Nav Item - Tables -->
             <li class="nav-item">
-                <a class="nav-link" href="index.html">
+                <a class="nav-link" href="{{ route('admin.reports') }}">
                 <i class="fa-sharp fa-solid fa-notes-medical"></i>
                     <span>Transaction</span></a>
             </li>
@@ -173,8 +157,8 @@
                         
                         <!-- Nav Item - User Information -->
                         <div class="dropdown">
-                            <button class="btn btn-info dropdown-toggle me-2 text-capitalize" type="button" id="dropdownMenuButton" data-mdb-toggle="dropdown" aria-expanded="false">
-                            Admin {{ Auth::user()->firstname }} 
+                            <button class="btn btn-info dropdown-toggle text-capitalize" type="button" id="dropdownMenuButton" data-mdb-toggle="dropdown" aria-expanded="false">
+                            {{ Auth::user()->firstname }} 
                             <img id="showImage" src="{{ (!empty(Auth::user()->photo))? url('upload/admin_profile/'.Auth::user()->photo):url('images/avatar/profile.jpg') }}" class="rounded-circle" height="22" alt="">
                         </button>
                         <ul class="dropdown-menu" aria-labelledby="dropdownMenuButton">
@@ -203,42 +187,55 @@
                                 </div>
                                 <!-- Card Body -->
                                 <div class="card-body">
-                                    <form action="{{ url('appointments/'.$appointment->id) }}" method="post">
-                                        {!! csrf_field() !!}
-                                        @method("PATCH")
-                                        <div class="mb-3">
-                                            <label for="formGroupExampleInput" class="form-label">Fullname</label>
-                                            <input type="text" readonly class="form-control border border-info" id="formGroupExampleInput" name="firstname" value="{{ $appointment->user->firstname }} {{ $appointment->user->lastname}}">
-                                        </div>
-                                        <!-- <div class="mb-3 mt-3">
-                                            <label for="formGroupExampleInput" class="form-label">Date</label>
-                                            <input type="date" class="form-control border border-info" id="formGroupExampleInput" name="date" value="{{ $appointment->date}}">
-                                        </div>
-                                        <div class="mb-3">
-                                            <label for="formGroupExampleInput" class="form-label">Time</label>
-                                            <input type="time" class="form-control border border-info" id="formGroupExampleInput" name="time" value="{{ $appointment->time}}">
-                                        </div> -->
-                                        <div class="col-md-14 mb-3">
-                                            <label for="inputState" class="form-label">Status</label>
-                                            <select id="inputState" class="form-select border border-info" name="status">
-                                            <option value="0" @selected( old('status' == 0))>Pending</option>
-                                            <option value="1" @selected( old('status' == 1))>Confirm</option>
-                                            <option value="2" @selected( old('status' == 2))>Arrived</option>
-                                            </select>
-                                        </div>
-                                        <div class="col-md-14 mb-3">
-                                            <label for="inputState" class="form-label">Select Doctor <span class="text-danger">*</span></label>
-                                            <select id="inputState" class="form-select border border-info" name="select_doctor">
-                                            @foreach ($dentist as $doc)
-                                                <option value="{{$doc->id }}">Dr. {{$doc->firstname }} {{$doc->lastname }}</option>
-                                            @endforeach
-                                            </select>
-                                        </div>
-                                        <div class="d-grid gap-2 d-md-block float-end">
-                                            <a href="{{ route('appointment') }}" class="btn btn-danger" type="button">Back</button></a>
-                                            <button class="btn btn-info" value="Update" type="submit">save</button>
-                                        </div>
-                                    </form>
+                                <form action="{{ url('appointments/'.$appointment->id) }}" method="post">
+    {!! csrf_field() !!}
+    @method("PATCH")
+    <div class="mb-3">
+        <label for="formGroupExampleInput" class="form-label">Fullname</label>
+        <input type="text" readonly class="form-control border border-info" id="formGroupExampleInput" name="firstname" value="{{ $appointment->user->firstname }} {{ $appointment->user->lastname}}">
+    </div>
+    <div class="mb-3 mt-3">
+        <label for="formGroupExampleInput" class="form-label">Date</label>
+        <input type="text" readonly class="form-control border border-info" id="formGroupExampleInput" name="date" value="{{ $appointment->date}}">
+    </div>
+    <div class="mb-3">
+        <label for="formGroupExampleInput" class="form-label">Time</label>
+        <input type="time" readonly class="form-control border border-info" id="formGroupExampleInput" name="time" value="{{ $appointment->time}}">
+    </div>
+    <div class="col-md-14 mb-3">
+        <label for="inputState" class="form-label">Status</label>
+        <select id="inputState" class="form-select border border-info" name="status">
+            <option selected disabled>{{ __('Select Status') }}</option>
+            <option value="1" @if(old('status', $appointment->status) == 1) selected @endif>Confirm</option>
+            <option value="2" @if(old('status', $appointment->status) == 2) selected @endif>Arrived</option>
+        </select>
+    </div>
+    <div class="col-md-14 mb-3">
+    <label for="inputState" class="form-label">Select Doctor <span class="text-danger">*</span></label>
+    <select id="inputState" class="form-select border border-info" name="select_doctor">
+        <option selected disabled>{{ __('Choose Doctor') }}</option>
+        @foreach ($dentist as $doc)
+            @php
+                $unavailable = in_array($doc->id, $unavailableDentists);
+            @endphp
+            <option value="{{ $doc->id }}" @if ($unavailable) disabled @endif>
+                Dr. {{ $doc->firstname }} {{ $doc->lastname }}
+                @if ($unavailable)
+                    (Unavailable)
+                @endif
+            </option>
+        @endforeach
+    </select>
+</div>
+
+    <div class="d-grid gap-2 d-md-block float-end">
+        <a href="{{ route('appointment') }}" class="btn btn-danger" type="button">Back</a>
+        <button class="btn btn-info" value="Update" type="submit">Save</button>
+    </div>
+</form>
+
+
+
                                 </div>
                             </div>
                         </div>

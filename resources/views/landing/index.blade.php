@@ -4,6 +4,8 @@
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+   
+
     <title>Dental Appointment</title>
     <link rel="stylesheet" href="/css/style.css">
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/css/bootstrap.min.css">
@@ -29,7 +31,7 @@
                     <input class="form-control me-2 border border-info" type="search" placeholder="Search" aria-label="Search">
                     <button class="btn btn-info me-2 " type="submit"><i class="fas fa-search"></i></button>
                     <a href="{{ route('login') }}" class="btn btn-info me-1" type="button" style="width:40%;"><i class="fas fa-lock me-1"></i> Login</button></a>
-                    <a href="{{ route('register') }}" class="btn btn-light me-2 border border-info" type="button" style="width:50%;"><i class="fas fa-registered"></i> Sign-up</button></a>
+                    <a href="{{ route('register') }}" class="btn btn-light me-2 border border-info text-info" type="button" style="width:50%;"><i class="fas fa-registered"></i> Sign-up</button></a>
                 </form>
             </div>
         </nav>
@@ -62,7 +64,7 @@
                     <h1 class="text-light text-start display-2 fst-normal">Welcome to our <br> <strong class="text-info fw-bold display-1">Dental Appointment and Management System</strong></h1>
                     <p class="text-start text-light fst-normal">Because of your smile, you make life more beautiful.</p>
                     <button type="button" class="btn btn-info float-start me-3 mb-11 data-mdb-ripple-color=dark" data-bs-toggle="modal" data-bs-target="#exampleModal"><i class="fas fa-calendar-check fa-lg me-2"></i> Set An Appointment</button>
-                    <a href="{{ route('products') }}" type="button" class="btn btn-light float-start ">Our Products</button></a>
+                    <a href="{{ route('products') }}" type="button" class="btn btn-light float-start text-info">Buy Product</button></a>
                 </div>
             </div>
             

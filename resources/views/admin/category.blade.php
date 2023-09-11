@@ -34,7 +34,7 @@
 
     <script defer src="/js/script.js"></script>
     <link rel="stylesheet" href="https://cdn.datatables.net/1.13.4/css/dataTables.bootstrap5.min.css">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/5.2.0/css/bootstrap.min.css">
+    <!-- <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/5.2.0/css/bootstrap.min.css"> -->
 
 </head>
 
@@ -122,7 +122,7 @@
 
             <!-- Orders-->
             <li class="nav-item">
-                <a class="nav-link" href="">
+                <a class="nav-link" href="{{ route('orders') }}">
                 <i class="fa-solid fa-bag-shopping"></i>
                     <span>Orders</span></a>
             </li>
@@ -145,14 +145,14 @@
 
             <!-- Nav Item - Charts -->
             <li class="nav-item">
-                <a class="nav-link" href="index.html">
+                <a class="nav-link" href="{{ route('payment') }}">
                     <i class="fa-sm fw-bold fa-2x">₱</i>
                     <span>Manage Payment</span></a>
             </li>
 
             <!-- Nav Item - Tables -->
             <li class="nav-item">
-                <a class="nav-link" href="index.html">
+                <a class="nav-link" href="{{ route('admin.reports') }}">
                 <i class="fa-sharp fa-solid fa-notes-medical"></i>
                     <span>Transaction</span></a>
             </li>
@@ -235,7 +235,43 @@
                                                     </td>
                                                     <td >
                                                         <a href="{{ url('/view.category/' . $cat->category_id) }}" type="button" class="btn btn-info btn-sm"><i class="far fa-eye"></i></a>
-                                                        <button type="button" class="btn btn-success  btn-sm"><i class="fas fa-pen"></i></button>
+                                                        <button type="button" class="btn btn-success  btn-sm" data-bs-toggle="modal" data-bs-target="#exampleModal{{$cat->category_id}}"><i class="fas fa-pen"></i></button>
+
+                                                        <!-- Modal -->
+                                                        <div class="modal fade" id="exampleModal{{$cat->category_id }}" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+                                                            <div class="modal-dialog">
+                                                                <div class="modal-content">
+                                                                    <div class="modal-header bg-info">
+                                                                        <h1 class="modal-title fs-5 text-light" id="exampleModalLabel">Edit Category</h1>
+                                                                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                                                                    </div>
+                                                                    <div class="modal-body">
+                                                                        <form action="" method="post">
+                                                                            <div class="">
+                                                                                <input type="text" hidden="" class="form-control" id="category_id" name="category_id" value="{{$cat->category_id}}">
+                                                                            </div>
+                                                                            <div class="mb-3">
+                                                                                <label for="formGroupExampleInput2" class="form-label">Category Name</label>
+                                                                                <input type="text" class="form-control" id="name" name="name" value="{{$cat->name }}">
+                                                                            </div>
+                                                                            <div class="mb-3">
+                                                                                <label for="formGroupExampleInput2" class="form-label">Image</label>
+                                                                                <input type="file" class="form-control " id="image" name="image" value="{{$cat->image }}">
+                                                                                <img src="{{ asset($cat->image) }}" class="card-img-top mt-2 mb-3" style="height: 8vh; width: 30%;" alt="...">
+                                                                            </div>
+                                                                            <div class="mb-3">
+                                                                                <label for="exampleFormControlTextarea1" class="form-label">Description</label>
+                                                                                <textarea class="form-control" rows="3" id="desc" name="desc">{{$cat->desc }}</textarea>
+                                                                            </div>
+                                                                    </div>
+                                                                    <div class="modal-footer">
+                                                                        <button type="button" class="btn btn-secondary btn-sm" data-bs-dismiss="modal">Close</button>
+                                                                        <button type="submit" class="btn btn-info btn-sm">Save changes</button>
+                                                                    </div>
+                                                                    </form>
+                                                                </div>
+                                                            </div>
+                                                        </div>
                                                         
                                                     </td>
                                                 </tr>

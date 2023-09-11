@@ -9,6 +9,7 @@ use Laravel\Sanctum\HasApiTokens;
 use App\Models\AppointmentModel;
 use App\Models\DentistPro;
 use App\Models\PersonalInfoModel;
+use App\Models\Schedule;
 
 class User extends Authenticatable
 {
@@ -45,5 +46,9 @@ class User extends Authenticatable
     {
         return $this->hasMany(PersonalInfoModel::class, 'Personal_information', 'id');
     } 
+    public function schedules()
+    {
+        return $this->hasMany(Schedule::class, 'doctor_id', 'id');
+    }
     
 }

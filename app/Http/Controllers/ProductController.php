@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Http\Request;
 use App\Models\Products;
+use App\Models\ProductDetails;
 use App\Models\Category;
 use RealRashid\SweetAlert\Facades\Alert;
 
@@ -16,11 +17,23 @@ class ProductController extends Controller
      */
     public function index()
     {
-     
         $products = Products::with('category')->get();
         $categories = Category::with('products')->get();
-        return view('admin/products', compact('products', 'categories'));
+        
+        $productDetails = [];
+        $totalQuantityById = [];
+
+        foreach ($products as $product) {
+            $details = ProductDetails::where('product_id', $product->id)->get();
+            $productDetails[$product->id] = $details;
+
+            $totalQuantity = $details->sum('qty');
+            $totalQuantityById[$product->id] = $totalQuantity;
+        }
+
+        return view('admin/products', compact('products', 'categories', 'productDetails', 'totalQuantityById'));
     }
+
 
     /**
      * Show the form for creating a new resource.
@@ -93,5 +106,14 @@ class ProductController extends Controller
     public function destroy($id)
     {
         //
+    }
+    public function stock(Request $request, $id)
+    {
+       $product = Products::findorFail($id);
+       $product->input_stock = $request->input('stock');
+       $product->stock = $product->input_stock + $product->stock;
+       $product->save();
+       Alert::success('Stock Updated Successfully');
+       return redirect()->back();
     }
 }

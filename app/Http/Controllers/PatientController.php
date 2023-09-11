@@ -18,7 +18,7 @@ class PatientController extends Controller
     {
         $pinfo = PersonalInfoModel::with('user')->get();
         $user = User::with('pinfo')->get();
-        return view('admin/patient',compact('pinfo', 'user'));
+        return view('admin/patient',compact('pinfo','user'));
     }
 
     public function user()

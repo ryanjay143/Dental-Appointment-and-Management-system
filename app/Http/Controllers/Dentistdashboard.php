@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 use App\Models\AppointmentModel;
 use App\Models\User;
 use App\Models\PersonalInfoModel;
+use App\Models\ServicePayment;
 use App\Models\Treatments;
 use Illuminate\Http\Request;
 use RealRashid\SweetAlert\Facades\Alert;
@@ -23,17 +24,17 @@ class Dentistdashboard extends Controller
         $user = auth()->user();
         // $confirm = AppointmentModel::where('status', 2)->count();
         $dentist = User::where('user_type',2)->count();
-        $patients = AppointmentModel::where('select_doctor',$user->id)->count();
+        $paidPatients = ServicePayment::where('doctorName',$user->firstname)->where('status',1)->count();
         $data = Treatments::whereIn('treatment_id', [26, 29, 15, 7])->get();
         $appointments = AppointmentModel::with('treatment')->get();
-
+        $patients =  AppointmentModel::where('select_doctor',$user->id)->count();
         
-        $appointment = AppointmentModel::where('select_doctor',$user->id)->whereIn('status',[1,2,3])->with('user')->get();
-        $confirm = AppointmentModel::where('select_doctor',$user->id)->whereIn('status',[1,2,3])->with('user')->count();
+        $appointment = AppointmentModel::where('select_doctor',$user->id)->whereIn('status',[1,2,3,4])->with('user')->get();
+        $confirm =  ServicePayment::where('doctorName',$user->firstname)->where('status',1)->with('user')->sum('total');
         $treatment = Treatments::with('appointments')->get();
         
         $user = User::with('appointment')->get();
-        return view('dentist/dashboard', ['treatments'=>$data], compact('appointment','user', 'treatment','appointments','patients','dentist','confirm'));
+        return view('dentist/dashboard', ['treatments'=>$data], compact('patients','appointment','user', 'treatment','appointments','paidPatients','dentist','confirm'));
     }
 
     /**

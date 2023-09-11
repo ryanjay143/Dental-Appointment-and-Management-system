@@ -5,6 +5,8 @@
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Patients Dashboard</title>
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/sweetalert/2.1.2/sweetalert.min.js" integrity="sha512-AA1Bzp5Q0K1KanKKmvN/4d3IRKVlv9PYgwFPvm32nPO6QS8yH1HO7LbgB1pgiOxPtfeg5zEn2ba64MUcqJx6CA==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
     <link rel="stylesheet" href="/css/style.css">
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/css/bootstrap.min.css">
     
@@ -85,62 +87,318 @@
         
        
         <section>
-            <div class="container">
-                <div class="card shadow mt-5 mb-5" style="width: 50rem; margin-left: 250px;">
-                    <div class="card-header bg-info">
-                        <h4 class="text-start text-light display-6">My Appointments
-                            <a href="{{ route('doneApp') }}" type="button" class="btn text-info btn-light  float-end">view done appointments</a>
-                        </h4>
-                    </div>
+            <div class="container-fluid">
+            <h3 class="display-6 p-2 mt-3">My Dashboard</h3>
+                <div class="card shadow border border-info">
                     <div class="card-body">
-                        <table id="example" class="table table-sm">
-                            <thead>
-                                <tr>
-                                    <th scope="col">#</th>
-                                    <th scope="col">Treatments</th>
-                                    <th scope="col">Doctor</th>
-                                    <th scope="col">Time</th>
-                                    <th scope="col">Date</th>
-                                    <th scope="col">Status</th>
-                                    <th scope="col">Action</th>
-                                </tr>
-                            </thead>
-                            <tbody>
-                                @foreach ($appointment as $apppointments)
-                                    <tr>
-                                        <th scope="row">{{$loop->iteration }}</th>
-                                        <td>{{ $apppointments->treatment->name }}</td>
-                                        <td>
-                                            @if ($apppointments->select_doctor ==0 )
-                                                <span class="text-muted">Waiting for doctor's Available</span>
-                                            @elseif ($apppointments->select_doctor ==3 )
-                                                <span>Dr. Jason</span>
-                                            @elseif ( $apppointments->select_doctor ==4 )
-                                                <span>Dr. Aeron</span>
-                                            @elseif ( $apppointments->select_doctor ==6 )
-                                                <span>Dr. Wida</span>
-                                            @endif
-                                        </td>
-                                        <td>{{ $apppointments->time }}</td>
-                                        <td>{{ $apppointments->date }}</td>
-                                        <td>
-                                            @if ($apppointments->status == 0)
-                                                <span class="badge text-bg-primary">Pending</span>
-                                                @elseif ($apppointments->status == 1)
-                                                <span class="badge text-bg-success text-light">Confirm</span>
-                                                @elseif ($apppointments->status == 2)
-                                                <span class="badge text-bg-info text-light">Arrived</span>
-                                                @elseif ($apppointments->status == 3)
-                                                <span class="badge text-bg-success">Done</span>
-                                            @endif
-                                        </td>
-                                        <td>
-                                            <a href="" class="far fa-calendar-xmark fa-lg text-danger m-3"></a>
-                                        </td>
-                                    </tr>
-                                @endforeach
-                            </tbody>
-                        </table>
+                        <div class="container text-center p-3">
+                            <div class="row">
+                                <div class="col">
+                                    <div class="container">
+                                        <div class="card mb-2  border border-info">
+                                            <div class="card-body">
+                                                <p class="text-start text-uppercase fw-bold">Pending & Confirm Orders</p>
+                                                    <div class="container text-center">
+                                                        <div class="row">
+                                                            <div class="col">
+                                                                <p class="text-start text-uppercase fw-bold">{{$pendingOrders}}</p>
+                                                            </div>
+                                                            <div class="col">
+                                                                <i class="fa-regular fa-clock text-info fa-2x"></i>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                            </div>
+                                            <div class="card-footer p-0">
+                                                <a href="" type="button" class="btn btn-link w-100" >More details</a>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col">
+                                    <div class="container">
+                                        <div class="card mb-2 border border-info">
+                                            <div class="card-body">
+                                                <p class="text-start text-uppercase fw-bold">History Orders</p>
+                                                    <div class="container text-center">
+                                                        <div class="row">
+                                                            <div class="col">
+                                                                <p class="text-start text-uppercase fw-bold">{{$paidorder}}</p>
+                                                            </div>
+                                                            <div class="col">
+                                                                <i class="fas fa-file-invoice fa-2x text-warning"></i>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                            </div>
+                                            <div class="card-footer p-0">
+                                                <a href="" type="button" class="btn btn-link w-100" >More details</a>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col">
+                                    <div class="container">
+                                        <div class="card mb-2 border border-info">
+                                            <div class="card-body">
+                                                <p class="text-start text-uppercase fw-bold">Pending Appointments</p>
+                                                    <div class="container text-center">
+                                                        <div class="row">
+                                                            <div class="col">
+                                                                <p class="text-start text-uppercase fw-bold">{{$pendingApp}}</p>
+                                                            </div>
+                                                            <div class="col">
+                                                                <i class="fas fa-calendar text-info fa-2x"></i>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                            </div>
+                                            <div class="card-footer p-0 ">
+                                                <a href="" type="button" class="btn btn-link w-100" >More details</a>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col">
+                                    <div class="container">
+                                        <div class="card mb-2 border border-info">
+                                            <div class="card-body">
+                                                <p class="text-start text-uppercase fw-bold">Done Appointments</p>
+                                                    <div class="container text-center">
+                                                        <div class="row">
+                                                            <div class="col">
+                                                                <p class="text-start text-uppercase fw-bold">{{$doneApp}}</p>
+                                                            </div>
+                                                            <div class="col">
+                                                                <i class="fas fa-calendar-check fa-2x text-success"></i>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                            </div>
+                                            <div class="card-footer p-0">
+                                                <a href="{{ route('doneApp') }}" type="button" class="btn btn-link w-100" >More details</a>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        
+
+                        <div class="container">
+                            <ul class="nav nav-tabs" id="myTab" role="tablist">
+                                <li class="nav-item" role="presentation">
+                                    <button class="nav-link active" id="home-tab" data-bs-toggle="tab" data-bs-target="#home-tab-pane" type="button" role="tab" aria-controls="home-tab-pane" aria-selected="true">Pending and Confirm Orders</button>
+                                </li>
+                                <li class="nav-item" role="presentation">
+                                    <button class="nav-link" id="profile-tab" data-bs-toggle="tab" data-bs-target="#profile-tab-pane" type="button" role="tab" aria-controls="profile-tab-pane" aria-selected="false">Pending, Confirm and Arrived Appointments</button>
+                                </li>
+                                <li class="nav-item" role="presentation">
+                                    <button class="nav-link" id="contact-tab" data-bs-toggle="tab" data-bs-target="#contact-tab-pane" type="button" role="tab" aria-controls="contact-tab-pane" aria-selected="false">History Orders</button>
+                                </li>
+                                <li class="nav-item" role="presentation">
+                                    <button class="nav-link" id="disabled-tab" data-bs-toggle="tab" data-bs-target="#disabled-tab-pane" type="button" role="tab" aria-controls="disabled-tab-pane" aria-selected="false">Done Appointments</button>
+                                </li>
+                            </ul>
+                        `   <div class="tab-content" id="myTabContent">
+                                <div class="tab-pane fade show active" id="home-tab-pane" role="tabpanel" aria-labelledby="home-tab" tabindex="0">
+                                    <div class="container">
+                                        <div class="card mt-3 border border-info">
+                                            <div class="card-body">
+                                                <div class="table-responsive">
+                                                    <table id="examples" class="table table-sm">
+                                                        <thead class="table-info">
+                                                            <tr>
+                                                                <th scope="col">#</th>
+                                                                <th scope="col">Patient Name</th>
+                                                                <th scope="col">Total Amount</th>
+                                                                <th scope="col">Order Status</th>
+                                                                <th scope="col">Action</th>
+                                                            </tr>
+                                                        </thead>
+                                                        <tbody>
+                                                            @foreach($pendingOrder as $orders)
+                                                                <tr>
+                                                                    <th scope="row">{{$loop->iteration}}</th>
+                                                                    <td>{{$orders->firstname}}</td>
+                                                                    <td>&#x20b1; {{$orders->total}}</td>
+                                                                    <td>
+                                                                        @if ($orders->status == 0)
+                                                                            <span class="badge text-bg-primary">Pending</span>
+                                                                            @elseif ($orders->status == 1)
+                                                                            <span class="badge text-bg-success text-light">Confirm</span>
+                                                                            @elseif ($orders->status == 2)
+                                                                            <span class="badge text-bg-success text-light">Paid</span>
+                                                                            @elseif ($orders->status == 3)
+                                                                            <span class="badge text-bg-success">Done</span>
+                                                                        @endif
+                                                                    </td>
+                                                                    <td>
+                                                                    <a href="{{ url('viewMyOrder/'.$orders->id) }}" type="button" class="btn btn-info btn-sm" ><i class="far fa-eye"></i></a>
+
+                                                                        
+                                                                    </td>
+                                                                </tr>
+                                                            @endforeach
+                                                        </tbody>
+                                                    </table>
+                                                </div>             
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="tab-pane fade" id="profile-tab-pane" role="tabpanel" aria-labelledby="profile-tab" tabindex="0">
+                                    <div class="card mt-3 border border-info">
+                                        <div class="card-body">
+                                             <table id="example" class="table table-sm">
+                                                <thead class="table-info">
+                                                    <tr>
+                                                        <th scope="col">#</th>
+                                                        <th scope="col">Treatments</th>
+                                                        <th scope="col">Doctor</th>
+                                                        <th scope="col">Date and Time</th>
+                                                        <th scope="col">Appointment Status</th>
+                                                        <th scope="col">Action</th>
+                                                    </tr>
+                                                </thead>
+                                                <tbody>
+                                                    @foreach ($appointment as $apppointments)
+                                                        <tr>
+                                                            <th scope="row">{{$loop->iteration }}</th>
+                                                            <td>{{ $apppointments->treatment->name }}</td>
+                                                            <td>
+                                                                @if ($apppointments->select_doctor ==0 )
+                                                                    <span class="text-muted">Waiting for doctor's Available</span>
+                                                                @elseif ($apppointments->select_doctor ==3 )
+                                                                    <span>Dr. Jason</span>
+                                                                @elseif ( $apppointments->select_doctor ==4 )
+                                                                    <span>Dr. Aeron</span>
+                                                                @elseif ( $apppointments->select_doctor ==6 )
+                                                                    <span>Dr. Wida</span>
+                                                                @endif
+                                                            </td>
+                                                            <td>{{ $apppointments->date }}</td>
+                                                            <td>
+                                                                @if ($apppointments->status == 0)
+                                                                    <span class="badge text-bg-primary">Pending</span>
+                                                                    @elseif ($apppointments->status == 1)
+                                                                    <span class="badge text-bg-success text-light">Confirm</span>
+                                                                    @elseif ($apppointments->status == 2)
+                                                                    <span class="badge text-bg-info text-light">Arrived</span>
+                                                                    @elseif ($apppointments->status == 3)
+                                                                    <span class="badge text-bg-success">Done</span>
+                                                                    @elseif ($apppointments->status == 4)
+                                                                    <span class="badge text-bg-danger text-light">Cancel</span>
+                                                                @endif
+                                                            </td>
+                                                            <td>
+                                                                <a  href="{{ url('cancelApp/' .$apppointments->id) }}" type="button " class="btn btn-danger btn-sm {{$apppointments->status == 4 ? 'disabled' : ''}}" onclick="confirmation(event)" >Cancel</a>
+                                                            </td>
+                                                        </tr>
+                                                    @endforeach
+                                                </tbody>
+                                            </table>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="tab-pane fade" id="contact-tab-pane" role="tabpanel" aria-labelledby="contact-tab" tabindex="0">
+                                    <div class="container">
+                                        <div class="card mt-3 border border-info">
+                                            <div class="card-body">
+                                                <table id="examp" class="table table-sm">
+                                                    <thead class="table-info">
+                                                        <tr>
+                                                            <th scope="col">#</th>
+                                                            <th scope="col">Patient Name</th>
+                                                            <th scope="col">Total Amount</th>
+                                                            <th scope="col">Order Status</th>
+                                                            <th scope="col">Action</th>
+                                                        </tr>
+                                                    </thead>
+                                                    <tbody>
+                                                        @foreach($paidOrder as $orders)
+                                                            <tr>
+                                                                <th scope="row">{{$loop->iteration}}</th>
+                                                                <td>{{$orders->firstname}}</td>
+                                                                <td>&#x20b1; {{$orders->total}}</td>
+                                                                <td>
+                                                                    @if ($orders->status == 0)
+                                                                        <span class="badge text-bg-primary">Pending</span>
+                                                                        @elseif ($orders->status == 1)
+                                                                        <span class="badge text-bg-success text-light">Confirm</span>
+                                                                        @elseif ($orders->status == 2)
+                                                                        <span class="badge text-bg-success text-light">Paid</span>
+                                                                        @elseif ($orders->status == 3)
+                                                                        <span class="badge text-bg-success">Done</span>
+                                                                    @endif
+                                                                </td>
+                                                                <td>
+                                                                   <a href="{{ url('viewMyOrder/'.$orders->id) }}" type="button" class="btn btn-info btn-sm" ><i class="far fa-eye"></i></a>
+
+                                                                    
+                                                                </td>
+                                                            </tr>
+                                                        @endforeach
+                                                    </tbody>
+                                                </table>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="tab-pane fade" id="disabled-tab-pane" role="tabpanel" aria-labelledby="disabled-tab" tabindex="0">
+                                    <div class="container">
+                                        <div class="card mt-3 border border-info">
+                                            <div class="card-body">
+                                                <table id="exam" class="table table-sm">
+                                                    <thead class="table-info">
+                                                        <tr>
+                                                            <th scope="col">#</th>
+                                                            <th scope="col">Treatments</th>
+                                                            <th scope="col">Doctor</th>
+                                                            <th scope="col">Date and Time</th>
+                                                            <th scope="col" class="text-center">Appointment Status</th>
+                                                        </tr>
+                                                    </thead>
+                                                    <tbody>
+                                                        @foreach ($doneAppointment as $apppointments)
+                                                            <tr>
+                                                                <th scope="row">{{$loop->iteration }}</th>
+                                                                <td>{{ $apppointments->treatment->name }}</td>
+                                                                <td>
+                                                                    @if ($apppointments->select_doctor ==0 )
+                                                                        <span class="text-muted">Waiting for doctor's Available</span>
+                                                                    @elseif ($apppointments->select_doctor ==3 )
+                                                                        <span>Dr. Jason</span>
+                                                                    @elseif ( $apppointments->select_doctor ==4 )
+                                                                        <span>Dr. Aeron</span>
+                                                                    @elseif ( $apppointments->select_doctor ==6 )
+                                                                        <span>Dr. Wida</span>
+                                                                    @endif
+                                                                </td>
+                                                                <td>{{ $apppointments->date }} {{ $apppointments->time }}</td>
+                                                                <td class="text-center">
+                                                                    @if ($apppointments->status == 0)
+                                                                        <span class="badge text-bg-primary">Pending</span>
+                                                                        @elseif ($apppointments->status == 1)
+                                                                        <span class="badge text-bg-success text-light">Confirm</span>
+                                                                        @elseif ($apppointments->status == 2)
+                                                                        <span class="badge text-bg-info text-light">Arrived</span>
+                                                                        @elseif ($apppointments->status == 3)
+                                                                        <span class="badge text-bg-success text-light">Done</span>
+                                                                        @elseif ($apppointments->status == 4)
+                                                                        <span class="badge text-bg-danger text-light">Cancel</span>
+                                                                    @endif
+                                                                </td>
+                                                            </tr>
+                                                        @endforeach
+                                                    </tbody>
+                                                </table>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
                     </div>
                 </div>
             </div>
@@ -261,6 +519,34 @@
             <!-- Copyright -->
         </footer>
         <!-- Footer -->
+
+    <script type="text/javascript">
+        
+        function confirmation(ev)
+        {
+            ev.preventDefault();
+
+            var urlToRedirect=ev.currentTarget.getAttribute('href');
+
+            console.log(urlToRedirect);
+
+            swal({
+                title:"Are you sure to cancel this Appointment?" ,
+                text :"You won't be able to revert this delete",
+                icon :"warning",
+                buttons : true,
+                dangerMode : true,
+            })
+
+            .then((willCancel)=>
+            {
+                if(willCancel)
+                {
+                    window.location.href=urlToRedirect;
+                }
+            });
+        }
+    </script>
 
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.bundle.min.js"></script>
     

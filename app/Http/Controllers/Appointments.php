@@ -1,12 +1,17 @@
 <?php
 
+
 namespace App\Http\Controllers;
 use App\Models\AppointmentModel;
 use App\Models\User;
 use App\Models\Treatments;
+
 use Illuminate\Http\Request;
 use RealRashid\SweetAlert\Facades\Alert;
 use Illuminate\Support\Facades\DB;
+use App\Models\Schedule;
+
+
 
 class Appointments extends Controller
 {
@@ -40,13 +45,32 @@ class Appointments extends Controller
     {
         //
     }
+
+    // Select Doctor
     
     public function show($id)
-    {
-       $dentist = DB::table('tb_user')->where('user_type', 2)->get();
-       $appointment = AppointmentModel::find($id);
-       return view('admin/viewApp',compact('dentist'))->with('appointment',$appointment);
-    }
+{
+    $dentist = DB::table('tb_user')->where('user_type', 2)->get();
+    $appointment = AppointmentModel::find($id);
+    $start_date = $appointment->date; // Assuming 'date' is the column name for the start date
+    $end_date = $appointment->date; // Assuming 'date' is the column name for the end date
+
+    $unavailableDentists = Schedule::where('unavailability', 1)
+        ->where(function ($query) use ($start_date, $end_date) {
+            $query->where('start_date', '<=', $end_date)
+                ->where('end_date', '>=', $start_date);
+        })
+        ->pluck('doctor_id')
+        ->toArray();
+
+    return view('admin/viewApp', compact('dentist', 'appointment', 'unavailableDentists'));
+}
+
+
+    
+
+
+
 
     
     public function edit($id)

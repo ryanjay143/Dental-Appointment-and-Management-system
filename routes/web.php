@@ -57,8 +57,10 @@ Route::post('appointment',[UserpageController::class, 'setAppointment'])->name('
 Route::get('dental/appointments',[UserpageController::class, 'dentalApp'])->name('userApp');
 Route::get('dental/services',[UserpageController::class, 'dentalServices'])->name('dentalServices');
 Route::get('homepage/dentist',[UserpageController::class, 'userdentist'])->name('userDentist');
-Route::get('homepage/appointmentTable',[UserpageController::class, 'appointmentTable'])->name('appointmentTable');
+Route::get('homepage/dashboard',[UserpageController::class, 'appointmentTable'])->name('appointmentTable');
 Route::get('homepage/doneAppointments',[UserpageController::class, 'done'])->name('doneApp');
+Route::get('cancelApp/{id}',[UserpageController::class, 'cancelApp']);
+Route::get('viewMyOrder/{id}',[UserpageController::class, 'myOrder']);
 
 
 // CategoryController
@@ -72,10 +74,28 @@ Route::get('view.category/{category_id}',[CategoryController::class, 'show']);
 
 // Admin
 Route::get('admin/dashboard',[AdminController::class, 'dashboard'])->name('admin.dashboard');
+Route::get('admin/reports',[AdminController::class, 'reports'])->name('admin.reports');
 Route::get('/show/appointments/{id}',[AdminController::class, 'showApp']);
 Route::post('/updateAppointments/{id}',[AdminController::class, 'update']);
 Route::get('admin/profile',[AdminController::class, 'profile'])->name('admin.profile');
 Route::get('admin/Editprofile',[AdminController::class, 'editProfile'])->name('edit.Editprofile');
+Route::get('admin/orders',[AdminController::class, 'orders'])->name('orders');
+Route::post('/updateStatus/{id}',[AdminController::class, 'changeStatus']);
+Route::get('admin/payment',[AdminController::class, 'payment'])->name('payment');
+Route::get('view/Receipt/{id}',[AdminController::class, 'receipt']);
+Route::post('/payment_details/{id}',[AdminController::class, 'paymentDetails']);
+Route::post('/service_payment/{id}',[AdminController::class, 'servicePayment']);
+Route::get('adminViewOrder/{id}',[AdminController::class, 'adminViewOrder']);
+Route::get('viewOrder/{id}',[AdminController::class, 'viewOrder']);
+Route::post('changeOrderStatus/{id}',[AdminController::class, 'changeOrderStatus']);
+Route::get('view/Receipt/service/{id}',[AdminController::class, 'serviceReceipt']);
+Route::post('/update-quantity', [AdminController::class, 'updateQuantity'])->name('updateQuantity');
+Route::post('product/details', [AdminController::class, 'product_details'])->name('product.details');
+
+
+
+
+
 
 // Patient Controller
 Route::resource('patients',PatientController::class);
@@ -87,9 +107,10 @@ Route::get('/viewUsers/{id}',[PatientController::class, 'viewUser']);
 
 // Admin Product 
 Route::resource('products',ProductController::class);
-Route::get('dental/products',[ProductController::class, 'index'])->name('product.view');
+Route::get('dental/products/',[ProductController::class, 'index'])->name('product.view');
 Route::get('add/products',[ProductController::class, 'create'])->name('add.products');
 Route::post('add/product',[ProductController::class, 'store'])->name('add.product');
+Route::post('product/stock/{id}',[ProductController::class, 'stock']);
 
 // Homepage Products
 Route::get('homepage/products',[UserpageController::class, 'dentalProduct'])->name('userProducts');
@@ -120,7 +141,17 @@ Route::resource('dental', DentistController::class);
 Route::resource('appointments', Appointments::class);
 Route::get('admin/appointments',[Appointments::class, 'index'])->name('appointment');
 Route::post('/dentistAppointmentUpdate/{id}',[DentistController::class, 'updateStatus']);
-
+Route::post('/addTreatment/{treatment_id}',[DentistController::class, 'addtreatment']);
+Route::post('/addDrugs/{id}',[DentistController::class, 'adddrugs']);
+Route::get('/myPatients/{id}',[DentistController::class, 'myPatient']);
+Route::get('/deleteService/{id}',[DentistController::class, 'deleteService']);
+Route::get('/deleteMedical/{id}',[DentistController::class, 'deleteMedical']);
+Route::get('printPrescription',[DentistController::class, 'print'])->name('printPrescription');
+Route::get('dentist/calendar',[DentistController::class, 'calendar'])->name('calendar');
+Route::get('payment/information',[DentistController::class, 'paymentInfo'])->name('payment.info');
+Route::get('dentist/reports',[DentistController::class, 'dentalReports'])->name('dental.reports');
+Route::get('dentist/schedule',[DentistController::class, 'schedule'])->name('dentist.schedule');
+Route::post('schedules', [DentistController::class, 'dentist_schedule'])->name('schedules.store');
 
 
 // Dentist Profile
@@ -137,6 +168,7 @@ Route::post('admin/Updateprofile',[AdminController::class, 'adminUpdateProfile']
 // Dentist-dashboard
 Route::get('dentist/dashboard',[Dentistdashboard::class, 'index'])->name('dentist.dashboard');
 Route::get('dentist/patients',[AdminController::class, 'dentalpatients'])->name('dental.patients');
+
 
 //User Page
 Route::get('homepage/myprofile',[UserpageController::class, 'profile'])->name('profile');

@@ -75,22 +75,6 @@
             <div class="sidebar-heading">
                 Interface
             </div>
-             
-            <!-- Nav Item - Utilities Collapse Menu -->
-
-             <!-- Users Managements -->
-             <!-- <li class="nav-item">
-                <a class="nav-link" href="{{ route('users.manage') }}">
-                <i class="fas fa-user fa-2x"></i>
-                    <span>Users Management</span></a>
-            </li> -->
-
-             <!-- Patients -->
-             <!-- <li class="nav-item">
-                <a class="nav-link" href="{{ route('dental.patient') }}">
-                <i class="fa-solid fa-wheelchair"></i>
-                    <span>Patients</span></a>
-            </li> -->
 
           <!-- Nav Item - Pages Collapse Menu -->
             <li class="nav-item">
@@ -124,7 +108,7 @@
 
             <!-- Orders-->
             <li class="nav-item">
-                <a class="nav-link" href="">
+                <a class="nav-link" href="{{ route('orders') }}">
                 <i class="fa-solid fa-bag-shopping"></i>
                     <span>Orders</span></a>
             </li>
@@ -147,14 +131,14 @@
 
             <!-- Nav Item - Charts -->
             <li class="nav-item">
-                <a class="nav-link" href="index.html">
+                <a class="nav-link" href="{{ route('payment') }}">
                     <i class="fa-sm fw-bold fa-2x">₱</i>
                     <span>Manage Payment</span></a>
             </li>
 
             <!-- Nav Item - Tables -->
             <li class="nav-item">
-                <a class="nav-link" href="index.html">
+                <a class="nav-link" href="{{ route('admin.reports') }}">
                 <i class="fa-sharp fa-solid fa-notes-medical"></i>
                     <span>Transaction</span></a>
             </li>

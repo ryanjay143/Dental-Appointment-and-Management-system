@@ -34,7 +34,7 @@
 
     <script defer src="/js/script.js"></script>
     <link rel="stylesheet" href="https://cdn.datatables.net/1.13.4/css/dataTables.bootstrap5.min.css">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/5.2.0/css/bootstrap.min.css">
+   
 
 </head>
 
@@ -51,7 +51,7 @@
             <!-- Sidebar - Brand -->
             <a class="sidebar-brand d-flex align-items-center justify-content-center" href="">
                 <div class="sidebar-brand-icon ">
-                <i class="fas fa-user-md fa-lg "></i>
+                <img src="{{ (!empty(Auth::user()->photo))? url('upload/dentist_profile/'.Auth::user()->photo):url('images/avatar/empty.png') }}" class="rounded-circle" height="22" alt="">
                 </div>
                 <div class="sidebar-brand-text mx-2 ">I am Dentist</div>
             </a>
@@ -78,9 +78,15 @@
             <!-- Nav Item - Utilities Collapse Menu -->
              <!-- Dentist- Dashboard -->
              <li class="nav-item">
-                <a class="nav-link" href="index.html">
+                <a class="nav-link" href="{{ route('calendar') }}">
                 <i class="fas fa-calendar-alt"></i>
                     <span>Calendar</span></a>
+            </li>
+
+            <li class="nav-item">
+                <a class="nav-link" href="{{ route('dentist.schedule') }}">
+                <i class="fas fa-calendar-alt"></i>
+                    <span>Create Schedule</span></a>
             </li>
 
             
@@ -93,24 +99,24 @@
 
 
             <!-- Nav Item - Pages Collapse Menu -->
-            <li class="nav-item">
+            <!-- <li class="nav-item">
                 <a class="nav-link" href="index.html">
                     <i class="fab fa-product-hunt"></i>
                     <span>Messages</span></a>
-            </li>
+            </li> -->
 
             <!-- Nav Item - Charts -->
             <li class="nav-item">
-                <a class="nav-link" href="index.html">
+                <a class="nav-link" href="{{ route('payment.info') }}">
                     <i class="fa-sm fw-bold">₱</i>
                     <span>Payment Information</span></a>
             </li>
 
             <!-- Nav Item - Tables -->
             <li class="nav-item">
-                <a class="nav-link" href="index.html">
+                <a class="nav-link" href="{{ route('dental.reports') }}">
                 <i class="fas fa-cog"></i>
-                    <span>Settings</span></a>
+                    <span>Reports</span></a>
             </li>
 
             <!-- Divider -->
@@ -151,7 +157,7 @@
                         <!-- Nav Item - User Information -->
                         <div class="dropdown">
                             <button class="btn btn-info dropdown-toggle me-2 text-capitalize" type="button" id="dropdownMenuButton" data-mdb-toggle="dropdown" aria-expanded="false">
-                            Hi Dr. {{ Auth::user()->firstname }}
+                            Dr. {{ Auth::user()->firstname }}
                             <img src="{{ (!empty(Auth::user()->photo))? url('upload/dentist_profile/'.Auth::user()->photo):url('images/avatar/empty.png') }}" class="rounded-circle" height="22" alt="">
                         </button>
                         <ul class="dropdown-menu" aria-labelledby="dropdownMenuButton">
@@ -180,8 +186,8 @@
                                     <div class="row no-gutters align-items-center">
                                         <div class="col mr-2">
                                             <div class="text-xs font-weight-bold text-primary text-uppercase mb-1">
-                                                Total patient this month</div>
-                                            <div class="h5 mb-0 font-weight-bold text-gray-800">{{$patients}}</div>
+                                                Paid patient</div>
+                                            <div class="h5 mb-0 font-weight-bold text-gray-800">{{$paidPatients}}</div>
                                         </div>
                                         <div class="col-auto">
                                             <i class="fas fa-user fa-2x text-gray-300"></i>
@@ -234,11 +240,11 @@
                                     <div class="row no-gutters align-items-center">
                                         <div class="col mr-2">
                                             <div class="text-xs font-weight-bold text-warning text-uppercase mb-1">
-                                                Approval Request</div>
-                                            <div class="h5 mb-0 font-weight-bold text-gray-800">{{$confirm}}</div>
+                                                Total Earnings</div>
+                                            <div class="h5 mb-0 font-weight-bold text-gray-800">&#8369; {{number_format($confirm, 2, '.','.')}}</div>
                                         </div>
                                         <div class="col-auto">
-                                            <i class="fas fa-comments fa-2x text-gray-300"></i>
+                                            <i class="fa-2x text-gray-300">&#8369;</i>
                                         </div>
                                     </div>
                                 </div>
@@ -252,90 +258,61 @@
 
                         <!-- Area Chart -->
                         <div class="col-xl-8 col-lg-7">
-                            <div class="card shadow mb-4">
+                            <div class="card shadow mb-4" style="width: 60rem;">
                                 <!-- Card Header - Dropdown -->
-                                <div class="card-header py-3 d-flex flex-row align-items-center justify-content-between">
-                                    <h6 class="m-0 font-weight-bold text-info">Today's Appointment</h6>
+                                <div class="card-header bg-info py-3 d-flex flex-row align-items-center justify-content-between">
+                                    <h6 class="m-0 font-weight-bold text-light">Today's Appointment</h6>
                                    
                                 </div>
                                 <!-- Card Body -->
                                 <div class="card-body">
-                                <div class="card-body">
-                                    <table id="example" class="table table-striped" style="width:100%">
-                                        <thead class="table-info">
-                                            <tr class="text-dark">
-                                                <th>#</th>
-                                                <th>Name</th>
-                                                <th>Treatments</th>
-                                                <th>Status</th>
-                                                <th>Time</th>
-                                                <th>Action</th>
-                                            </tr>
-                                        </thead>
-                                        <tbody>
+                                    <div class="container">
+                                        <div class="table-responsive">
+                                        <table id="example" class="table" style="width:100%">
+                                            <thead class="table-info">
+                                                <tr class="text-dark">
+                                                    <th>#</th>
+                                                    <th>Name</th>
+                                                    <th>Treatments</th>
+                                                    <th>Status</th>
+                                                    <th>Date and Time</th>
+                                                    <th>Action</th>
+                                                </tr>
+                                            </thead>
+                                            <tbody>
                                             
-                                        @foreach ($appointment as $app)
+                                            @foreach ($appointment as $app)
                                             <tr>
                                                 <td scope="row">{{$loop->iteration }}</td>
                                                 <td>{{$app->user->firstname }}</td>
                                                 <td>{{$app->treatment->name}}</td>
                                                 <td>
                                                     @if($app->status == 1)
-                                                        <span class="badge text-bg-success">Confirm</span>
-                                                        @elseif($app->status ==2)
-                                                            <span class="badge text-bg-info">Arrived</span>
-                                                        @elseif($app->status ==3)
-                                                        <span class="badge text-bg-success">Done</span>
+                                                        <span class="badge text-bg-success text-light">Confirm</span>
+                                                        @elseif($app->status == 2)
+                                                            <span class="badge text-bg-info text-light">Arrived</span>
+                                                        @elseif($app->status == 3)
+                                                            <span class="badge text-bg-success text-light">Done</span>
+                                                      
                                                     @endif
                                                 </td>
                                               
-                                                <td>{{ $app->time }}</td>
+                                                <td>{{ $app->date }} {{ $app->time }}</td>
                                                 
                                                 <td>
-                                                    <a href="{{ url('/viewPatients/'.$app->id) }}" type="submit" class="btn btn-info btn-sm text-capitalize" ><i class="fas fa-eye"></i></button></a>
+                                                    <a href="{{ url('/viewPatients/'.$app->id) }}" type="submit" class="btn btn-info btn-sm text-capitalize {{$app->status == 3 ? 'disabled' : ''}}" ><i class="fas fa-eye"></i></button></a>
                                                 </td>
                                             </tr>
                                             @endforeach
                                         </tbody>
-                                    </table>
-                                </div>
+                                        </table>
+                                        </div>
+                                    </div>
                                 </div>
                             </div>
                         </div>
 
-                        <!-- Pie Chart -->
-                        <div class="col-xl-4 col-lg-5">
-                            <div class="card shadow mb-4">
-                                <!-- Card Header - Dropdown -->
-                                <div class="card-header py-3 d-flex flex-row align-items-center justify-content-between">
-                                    <h6 class="m-0 font-weight-bold text-info">Top Treatments</h6>
-                                    <a href="" type="button" class="btn btn-link float-end text-info text-capitalize fw-bold btn-sm" data-mdb-ripple-color="dark">View all treatments</a>
-                                </div>
-                                <!-- Card Body -->
-                                <div class="card-body">
-                                    <table class="table">
-                                        <thead class="table-info">
-                                            <tr>
-                                            <th scope="col">#</th>
-                                            <th scope="col">Photo</th>
-                                            <th scope="col">Treatment name</th>
-                                            </tr>
-                                        </thead>
-                                        <tbody>
-                                            @foreach ($treatments as $treatment)
-                                                <tr>
-                                                    <th scope="row">{{$loop->iteration}}</th>
-                                                    <td>
-                                                        <img src="{{ asset($treatment->image) }}" class="rounded-circle border border-dark" style="height: 5vh; width: 30%;" alt="...">
-                                                    </td>
-                                                    <td>{{ $treatment->name }}</td>
-                                                </tr>
-                                            @endforeach
-                                        </tbody>
-                                    </table>
-                                </div>
-                            </div>
-                        </div>
+                       
                     </div>
 
                 </div>
